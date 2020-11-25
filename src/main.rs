@@ -12,10 +12,10 @@ struct SearchResult {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    eprintln!("*** 開始 ***");
     let endpoint = "https://api.twitter.com/1.1/search/tweets.json?lang=ja";
     let mut headers = HeaderMap::new();
-    dotenv().ok(); // ここで.envファイルの値を読み込んでいます。
+    // .envファイルの値を読み込む
+    dotenv().ok();
     let bearer_token = env::var("bearer_token").expect("bearer_token is not found");
     headers.insert(
         AUTHORIZATION,
@@ -25,12 +25,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .get(endpoint)
         .query(&[("q", "かき氷"), ("count", "5")])
         .headers(headers);
-    let res = client.send().await?;
-    // println!("{:#?}", res);
-    let body: SearchResult = res.json().await?;
-
-    println!("{:#?}", body);
-
-    eprintln!("*** 終了 ***");
+    let res: SearchResult = client.send().await?.json().await?;
+    println!("{:#?}", res);
     Ok(())
 }
