@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react';
-import { Button, Container, Divider, Header, Segment } from 'semantic-ui-react'
+import { Container, Divider, Header, Segment } from 'semantic-ui-react'
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
+import SearchButton from './components/SearchButton';
 
 const valueOptions = [
 	{ key: '5', value: '5', text: '5' },
@@ -56,7 +57,7 @@ const App: FC = () => {
 			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={state.word} onChange={handleKeyWordChange}/>
 			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange}/>
-			<Button color="blue" onClick={searchAPI}>Search</Button>
+			<SearchButton color="twitter" onClick={searchAPI} />
 		</Segment>
 		<Divider />
 		<Header as="h2">Result</Header>
