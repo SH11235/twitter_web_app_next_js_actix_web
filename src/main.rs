@@ -1,4 +1,5 @@
-use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
+use actix_cors::Cors;
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 use dotenv::dotenv;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
@@ -62,9 +63,13 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    println!("Starting Twitter API on localhost:8000");
     HttpServer::new(|| {
+        let cors = Cors::default()
+              .allowed_origin("http://localhost:3000")
+              .allowed_methods(vec!["GET"]);
         App::new()
-            .wrap(middleware::Compress::default())
+            .wrap(cors)
             .service(web::resource("/twitter_search").route(web::get().to(twitter_search)))
     })
     .bind("0.0.0.0:8000")
