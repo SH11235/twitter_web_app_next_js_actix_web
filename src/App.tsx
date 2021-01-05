@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Container, Divider, Header, Segment } from 'semantic-ui-react'
+import { Container, Divider, Header, Segment } from 'semantic-ui-react';
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 import SearchButton from './components/SearchButton';
@@ -66,7 +66,7 @@ const App: FC = () => {
 			<p>{state.result}</p>
 		</Segment>
 	</Container>
-	)
+	);
 };
 
 export default App;

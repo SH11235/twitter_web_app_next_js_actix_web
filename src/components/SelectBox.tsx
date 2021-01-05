@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import './SelectBox.css'
+import './SelectBox.css';
 
 type selectOption = {
 	key: string,
@@ -26,8 +26,8 @@ const SelectBox: FC<Props> = props => {
 		}
 		</select>
 		</>
-	)
-}
+	);
+};
 
 
 export default SelectBox;
