@@ -14,6 +14,7 @@ const App: FC = () => {
 	const [ state, setState ] = useState({
 		view: '5',
 		word: '',
+		result: '',
 	});
 
 	const handleKeyWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,21 @@ const App: FC = () => {
 			return {...state, view: value };
 		});
 	};
-	
+	const searchAPI = () => {
+		console.log(state);
+		fetch('http://localhost:8000/twitter_search?q=' + state.word + '&count=' + state.view, {
+			mode: 'cors'
+		})
+		.then(res => {
+			return res.json();
+		})
+		.then(json => {
+			console.log(json);
+			setState(() => {
+				return {...state, result: "" };
+			});
+		})
+	};
 
 	return (
 	<Container text style={{ marginTop: '7rem' }}>
@@ -41,7 +56,13 @@ const App: FC = () => {
 			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={state.word} onChange={handleKeyWordChange}/>
 			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange}/>
-			<Button  color="blue">Search</Button>
+			<Button color="blue" onClick={searchAPI}>Search</Button>
+		</Segment>
+		<Divider />
+		<Header as="h2">Result</Header>
+		<Divider />
+		<Segment>
+			<p>{state.result}</p>
 		</Segment>
 	</Container>
 	)
