@@ -1,26 +1,25 @@
-import React, { FC, useState } from 'react';
-import { Select } from 'semantic-ui-react'
+import React, { FC } from 'react';
 
 type selectOption = {
 	key: string,
 	value: string,
 	text: string,
-}
+};
 interface Props {
 	value: string,
 	options: Array<selectOption>,
-	onChange: (e: any) => void
-}
+	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+};
 
 const SelectBox: FC<Props> = props => {
 	const { value, options, onChange } = props;
 	
 	return (
 		<>
-		<select placeholder='5' value={value} onChange={onChange} >
+		<select value={value} onChange={onChange} >
 		{ options.map((item, index) =>
 			<option key={index}>
-				{ item.value }
+				{ item.text }
 			</option>
 			)
 		}
