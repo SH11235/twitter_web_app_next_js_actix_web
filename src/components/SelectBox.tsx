@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import './SelectBox.css'
 
 type selectOption = {
 	key: string,
@@ -16,7 +17,7 @@ const SelectBox: FC<Props> = props => {
 	
 	return (
 		<>
-		<select value={value} onChange={onChange} >
+		<select className="select-box" value={value} onChange={onChange} >
 		{ options.map((item, index) =>
 			<option key={index}>
 				{ item.text }

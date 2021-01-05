@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Container, Divider, Header, Segment } from 'semantic-ui-react'
-import './App.css';
+import { Button, Container, Divider, Header, Segment } from 'semantic-ui-react'
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 
@@ -39,10 +38,10 @@ const App: FC = () => {
 		<Header as="h2">Twitter Search</Header>
 		<Divider />
 		<Segment>
-			<Header as="h3">キーワードボックス, 表示件数</Header>
+			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={state.word} onChange={handleKeyWordChange}/>
 			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange}/>
-
+			<Button  color="blue">Search</Button>
 		</Segment>
 	</Container>
 	)
