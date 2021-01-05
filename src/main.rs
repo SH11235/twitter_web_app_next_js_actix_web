@@ -66,8 +66,8 @@ async fn main() -> std::io::Result<()> {
     println!("Starting Twitter API on localhost:8000");
     HttpServer::new(|| {
         let cors = Cors::default()
-              .allowed_origin("http://localhost:3000")
-              .allowed_methods(vec!["GET"]);
+            .allowed_origin("http://localhost:3000")
+            .allowed_methods(vec!["GET"]);
         App::new()
             .wrap(cors)
             .service(web::resource("/twitter_search").route(web::get().to(twitter_search)))
