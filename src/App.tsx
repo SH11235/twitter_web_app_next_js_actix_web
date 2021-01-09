@@ -82,7 +82,6 @@ const App: FC = () => {
 			});
 		};
 	};
-	// searchAPI();
 
 	return (
 	<Container text style={{ marginTop: '7rem' }}>
@@ -100,7 +99,7 @@ const App: FC = () => {
 		<Segment>
 			<Card.Group>
 			{ state.results.map((item: any, index: number) =>
-				<Card key={index} >
+				<Card key={index} style={{ width: '328px' }} >
 					<Card.Content>
 						<Card.Header href={item.userLink} >
 							<Image src={ item.profileImageUrl } floated='left' size='mini' />
