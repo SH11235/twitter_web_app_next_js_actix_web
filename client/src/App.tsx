@@ -3,7 +3,7 @@ import { Container, Divider, Header, Segment } from 'semantic-ui-react';
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 import SearchButton from './components/SearchButton';
-import { Card, Image } from 'semantic-ui-react';
+import SearchResult from './components/SearchResult';
 import { twitterBaseURL, searchAPIBaseURL } from './common/setting';
 
 
@@ -97,28 +97,7 @@ const App: FC = () => {
 		<Header as="h2">Result</Header>
 		<Divider />
 		<Segment>
-			<Card.Group>
-			{ state.results.map((item: any, index: number) =>
-				<Card key={index} style={{ width: '328px' }} >
-					<Card.Content>
-						<Card.Header href={item.userLink} target="_blank" rel="noopener noreferrer" >
-							<Image src={ item.profileImageUrl } floated='left' size='mini' />
-							{ item.userName }@{ item.screenName }
-						</Card.Header>
-						<Card.Meta>
-							<span className='date'>{ item.tweetTime }</span>
-						</Card.Meta>
-						<Card.Description href={ item.tweetLink } target="_blank" rel="noopener noreferrer" >
-							{ item.text }
-						</Card.Description>
-					</Card.Content>
-					<Card.Content extra>
-						
-					</Card.Content>
-				</Card>
-				)
-			}
-			</Card.Group>
+			<SearchResult results={state.results} />
 		</Segment>
 	</Container>
 	);
