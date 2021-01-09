@@ -3,7 +3,8 @@ import { Container, Divider, Header, Segment } from 'semantic-ui-react';
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 import SearchButton from './components/SearchButton';
-import { Card, Image } from 'semantic-ui-react'
+import { Card, Image } from 'semantic-ui-react';
+import { twitterBaseURL, searchAPIBaseURL } from './common/setting';
 
 
 const valueOptions = [
@@ -40,13 +41,12 @@ const App: FC = () => {
 	};
 	const searchAPI = async () => {
 		try {
-			const res = await fetch('http://localhost:8000/twitter_search?q=' + state.word + '&count=' + state.view, {
+			const res = await fetch(`${searchAPIBaseURL}?q=${state.word}&count=${state.view}`, {
 				mode: 'cors'
 			});
 			const json = await res.json();
 			const results = json.statuses.map((item: any) => {
-				const twitterDomain = "https://twitter.com";
-				const userLink = `${twitterDomain}/${item.user.screen_name}`;
+				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
 				const tweetLink = `${userLink}/status/${item.id_str}`;
 				return {
 					text: item.text,
