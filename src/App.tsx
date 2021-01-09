@@ -39,30 +39,48 @@ const App: FC = () => {
 		});
 	};
 	const searchAPI = async () => {
-		const res = await fetch('http://localhost:8000/twitter_search?q=' + state.word + '&count=' + state.view, {
-			mode: 'cors'
-		});
-		const json = await res.json();
-		const results = json.statuses.map((item: any) => {
-			const twitterDomain = "https://twitter.com";
-			const userLink = `${twitterDomain}/${item.user.screen_name}`;
-			const tweetLink = `${userLink}/status/${item.id_str}`;
-			return {
-				text: item.text,
-				tweetLink: tweetLink,
-				userLink: userLink,
-				tweetTime: item.created_at,
-				userName: item.user.name,
-				screenName: item.user.screen_name,
-				profileImageUrl: item.user.profile_image_url_https,
-			};
-		});
-		setState(() => {
-			return {
-				...state,
-				results: results,
-			};
-		});
+		try {
+			const res = await fetch('http://localhost:8000/twitter_search?q=' + state.word + '&count=' + state.view, {
+				mode: 'cors'
+			});
+			const json = await res.json();
+			const results = json.statuses.map((item: any) => {
+				const twitterDomain = "https://twitter.com";
+				const userLink = `${twitterDomain}/${item.user.screen_name}`;
+				const tweetLink = `${userLink}/status/${item.id_str}`;
+				return {
+					text: item.text,
+					tweetLink: tweetLink,
+					userLink: userLink,
+					tweetTime: item.created_at,
+					userName: item.user.name,
+					screenName: item.user.screen_name,
+					profileImageUrl: item.user.profile_image_url_https,
+				};
+			});
+			setState(() => {
+				return {
+					...state,
+					results: results,
+				};
+			});
+		} catch (error) {
+			const results = [{
+				text: "アクセス制限中",
+				tweetLink: "",
+				userLink: "",
+				tweetTime: "",
+				userName: "",
+				screenName: "",
+				profileImageUrl: "",
+			}];
+			setState(() => {
+				return {
+					...state,
+					results: results,
+				};
+			});
+		};
 	};
 	// searchAPI();
 
