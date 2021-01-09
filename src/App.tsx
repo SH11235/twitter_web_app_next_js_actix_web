@@ -101,14 +101,14 @@ const App: FC = () => {
 			{ state.results.map((item: any, index: number) =>
 				<Card key={index} style={{ width: '328px' }} >
 					<Card.Content>
-						<Card.Header href={item.userLink} >
+						<Card.Header href={item.userLink} target="_blank" rel="noopener noreferrer" >
 							<Image src={ item.profileImageUrl } floated='left' size='mini' />
 							{ item.userName }@{ item.screenName }
 						</Card.Header>
 						<Card.Meta>
 							<span className='date'>{ item.tweetTime }</span>
 						</Card.Meta>
-						<Card.Description href={ item.tweetLink }>
+						<Card.Description href={ item.tweetLink } target="_blank" rel="noopener noreferrer" >
 							{ item.text }
 						</Card.Description>
 					</Card.Content>
