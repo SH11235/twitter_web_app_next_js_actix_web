@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import './SelectBox.css';
 
 type selectOption = {
-	key: string,
+	key: number,
 	value: string,
 	text: string,
 };

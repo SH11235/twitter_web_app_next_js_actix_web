@@ -9,17 +9,18 @@ import Pager from './components/Pager';
 import {resultsType, searchAPI} from './common/searchAPI';
 
 
-// const valueOptions = [
-// 	{ key: '5', value: '5', text: '5' },
-// 	{ key: '10', value: '10', text: '10' },
-// 	{ key: '15', value: '15', text: '15' },
-// 	{ key: '30', value: '30', text: '30' },
-// ];
+const valueOptions = [
+	{ key: 10, value: '10', text: '10' },
+	{ key: 20, value: '20', text: '20' },
+	{ key: 30, value: '30', text: '30' },
+	{ key: 50, value: '50', text: '50' },
+	{ key: 100, value: '100', text: '100' },
+];
 
 const radioOptions = [
-	{  key: 'mixed', value: 'mixed', text: "mixed"},
-	{  key: 'recent', value: 'recent', text: "recent"},
-	{  key: 'popular', value: 'popular', text: "popular"},
+	{ key: 'mixed', value: 'mixed', text: "mixed"},
+	{ key: 'recent', value: 'recent', text: "recent"},
+	{ key: 'popular', value: 'popular', text: "popular"},
 ];
 
 const r: resultsType[] | [] = [];
@@ -74,7 +75,7 @@ const App: FC = () => {
 			type: searchCondState.type,
 		};
 		searchAPI(searchCond, setTotalPagesState, setResultState);
-	}
+	};
 
 	useEffect(() => {
 		hitSearchAPI();
@@ -89,14 +90,14 @@ const App: FC = () => {
 		});
 	};
 	
-	// TODO 表示件数指定のセレクトボックスを作る際にこれをもとにする
-	// const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-	// 	e.persist();
-	// 	const value = e.target.value;
-	// 	setState(() => {
-	// 		return {...state, view: value };
-	// 	});
-	// };
+	const [ viewNumState, setViewNumState ] = useState("10");
+	const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		e.persist();
+		const value = e.target.value;
+		setViewNumState(() => {
+			return value;
+		});
+	};
 
 	const handleRadioChange = (e: React.FormEvent<HTMLInputElement>, value: string) => {
 		e.persist();
@@ -138,14 +139,11 @@ const App: FC = () => {
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={keyWordState} onChange={handleKeyWordChange} />
-			{/* // TODO 表示件数指定のセレクトボックスを作る際にこれをもとにする
-				<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange} /> 
-			*/}
 			<SearchButton color="twitter" onClick={searchButtonClick} />
 			<RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
 		<Divider />
-		<Header as="h2">Result</Header>
+		<Header as="h3">Result: <SelectBox value={viewNumState} options={valueOptions} onChange={handleOptionChange} /></Header>
 		<Divider />
 		<Segment>
 			<SearchResult results={resultState.results} />
