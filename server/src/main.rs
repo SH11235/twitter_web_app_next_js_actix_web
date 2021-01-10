@@ -42,10 +42,11 @@ impl Twitter {
         let qs = QString::from(query_str);
         let q = qs.get("q").unwrap();
         let count = qs.get("count").unwrap();
+        let result_type = qs.get("type").unwrap();
 
         let client = reqwest::Client::new()
             .get(endpoint)
-            .query(&[("q", q), ("count", count)])
+            .query(&[("q", q), ("count", count), ("result_type", result_type)])
             .headers(headers);
         let res: SearchResult = client.send().await?.json().await?;
         println!("{:#?}", res);

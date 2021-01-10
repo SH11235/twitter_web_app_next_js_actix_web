@@ -4,6 +4,7 @@ import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 import SearchButton from './components/SearchButton';
 import SearchResult from './components/SearchResult';
+import RadioButton from './components/RadioButton';
 import { twitterBaseURL, searchAPIBaseURL } from './common/setting';
 
 
@@ -14,6 +15,12 @@ const valueOptions = [
 	{ key: '30', value: '30', text: '30' },
 ];
 
+const radioOptions = [
+	{  key: 'mixed', value: 'mixed', text: "mixed"},
+	{  key: 'recent', value: 'recent', text: "recent"},
+	{  key: 'popular', value: 'popular', text: "popular"},
+];
+
 // TODO 型付け
 const r: any[] = [];
 
@@ -21,6 +28,7 @@ const App: FC = () => {
 	const [ state, setState ] = useState({
 		view: '5',
 		word: 'テスト',
+		type: 'mixed',
 		results: r,
 	});
 
@@ -39,9 +47,18 @@ const App: FC = () => {
 			return {...state, view: value };
 		});
 	};
+
+	const handleRadioChange = (e: React.FormEvent<HTMLInputElement>, value: string) => {
+		e.persist();
+		setState(() => {
+			return {...state, type: value };
+		});
+	};
+
 	const searchAPI = async () => {
 		try {
-			const res = await fetch(`${searchAPIBaseURL}?q=${state.word}&count=${state.view}`, {
+			const params: string[] = [`q=${state.word}`, `count=${state.view}`, `type=${state.type}`];
+			const res = await fetch(`${searchAPIBaseURL}?${params.join('&')}`, {
 				mode: 'cors'
 			});
 			const json = await res.json();
@@ -89,9 +106,10 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
-			<KeyWordBox word={state.word} onChange={handleKeyWordChange}/>
-			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange}/>
+			<KeyWordBox word={state.word} onChange={handleKeyWordChange} />
+			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange} />
 			<SearchButton color="twitter" onClick={searchAPI} />
+			<RadioButton value={state.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
 		<Divider />
 		<Header as="h2">Result</Header>
