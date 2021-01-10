@@ -27,7 +27,6 @@ const r: any[] = [];
 
 const App: FC = () => {
 	const [ state, setState ] = useState({
-		view: '5',
 		word: 'テスト',
 		type: 'mixed',
 		results: r,
@@ -46,13 +45,14 @@ const App: FC = () => {
 		});
 	};
 	
-	const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		e.persist();
-		const value = e.target.value;
-		setState(() => {
-			return {...state, view: value };
-		});
-	};
+	// TODO 表示件数指定のセレクトボックスを作る際にこれをもとにする
+	// const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	// 	e.persist();
+	// 	const value = e.target.value;
+	// 	setState(() => {
+	// 		return {...state, view: value };
+	// 	});
+	// };
 
 	const handleRadioChange = (e: React.FormEvent<HTMLInputElement>, value: string) => {
 		e.persist();
@@ -89,7 +89,7 @@ const App: FC = () => {
 
 	const searchAPI = async () => {
 		try {
-			const params: string[] = [`q=${state.word}`, `count=${state.view}`, `type=${state.type}`];
+			const params: string[] = [`q=${state.word}`, `type=${state.type}`];
 			const res = await fetch(`${searchAPIBaseURL}?${params.join('&')}`, {
 				mode: 'cors'
 			});
@@ -147,7 +147,9 @@ const App: FC = () => {
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={state.word} onChange={handleKeyWordChange} />
-			<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange} />
+			{/* // TODO 表示件数指定のセレクトボックスを作る際にこれをもとにする
+				<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange} /> 
+			*/}
 			<SearchButton color="twitter" onClick={searchAPI} />
 			<RadioButton value={state.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
