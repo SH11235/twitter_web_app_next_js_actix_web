@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Pagination, PaginationProps } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
 	totalPages: number,
 	onClick: (e: PaginationProps) => void
 };

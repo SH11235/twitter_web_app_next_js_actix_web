@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Card, Image } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
 	results: any[],
 };
 
