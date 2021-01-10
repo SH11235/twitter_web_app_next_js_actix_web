@@ -1,10 +1,11 @@
 import React, { FC, useState } from 'react';
-import { Container, Divider, Header, Segment } from 'semantic-ui-react';
+import { Container, Divider, Header, PaginationProps, Segment } from 'semantic-ui-react';
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
 import SearchButton from './components/SearchButton';
 import SearchResult from './components/SearchResult';
 import RadioButton from './components/RadioButton';
+import Pager from './components/Pager';
 import { twitterBaseURL, searchAPIBaseURL } from './common/setting';
 
 
@@ -32,6 +33,11 @@ const App: FC = () => {
 		results: r,
 	});
 
+	const [ pageState, setPageState ] = useState({
+		page: 1,
+		totalPages: 0,
+	});
+
 	const handleKeyWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.persist();
 		const value = e.target.value;
@@ -55,6 +61,32 @@ const App: FC = () => {
 		});
 	};
 
+	const handlePageChange = (e: PaginationProps) => {
+		e.persist();
+		const pager = e.target.text;
+		const pagerToInt = parseInt(pager);
+		let page = pageState.page;
+		if (pager === "⟨") {
+			page = pageState.page === 1 ? 1 : pageState.page - 1;
+		} else if (pager === "«") {
+			page = 1;
+		} else if (pager === "⟩") {
+			page = pageState.page === pageState.totalPages ? pageState.totalPages : pageState.page + 1;
+		} else if (pager === "»") {
+			page = pageState.totalPages;
+		} else if (pager === "...") {
+			page = pageState.page;
+		} else if (Number.isInteger(pagerToInt)) {
+			page = pagerToInt;
+		}
+		setPageState(() => {
+			return {
+				...pageState,
+				page: page,
+			};
+		});
+	};
+
 	const searchAPI = async () => {
 		try {
 			const params: string[] = [`q=${state.word}`, `count=${state.view}`, `type=${state.type}`];
@@ -62,6 +94,14 @@ const App: FC = () => {
 				mode: 'cors'
 			});
 			const json = await res.json();
+			setPageState(() => {
+				console.log("json");
+				console.log(json.statuses.length);
+				return {
+					...pageState,
+					totalPages: json.statuses.length,
+				};
+			});
 			const results = json.statuses.map((item: any) => {
 				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
 				const tweetLink = `${userLink}/status/${item.id_str}`;
@@ -116,6 +156,7 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<SearchResult results={state.results} />
+			<Pager totalPages={ pageState.totalPages } onClick={ handlePageChange } />
 		</Segment>
 	</Container>
 	);
