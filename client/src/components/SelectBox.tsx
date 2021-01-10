@@ -6,7 +6,7 @@ type selectOption = {
 	value: string,
 	text: string,
 };
-interface Props {
+type Props = {
 	value: string,
 	options: Array<selectOption>,
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void

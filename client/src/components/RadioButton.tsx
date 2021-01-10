@@ -7,7 +7,7 @@ type selectOption = {
 	text: string,
 };
 
-interface Props {
+type Props = {
 	value: string,
 	options: Array<selectOption>,
 	onChange: (e: React.FormEvent<HTMLInputElement>, value: string) => void

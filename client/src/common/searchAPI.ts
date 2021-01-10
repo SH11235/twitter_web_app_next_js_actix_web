@@ -1,6 +1,6 @@
 import { twitterBaseURL, searchAPIBaseURL } from './setting';
 
-interface conditions {
+type conditions = {
 	word: string,
 	type: string,
 }

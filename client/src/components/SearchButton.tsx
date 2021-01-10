@@ -3,9 +3,11 @@ import { Button } from 'semantic-ui-react';
 
 type ButtonColor = "red" | "orange" | "yellow" | "olive" | "green" | "teal" | "blue" | "violet" | "purple" | "pink" | "brown" | "grey" | "black" | "facebook" | "google plus" | "vk" | "twitter" | "linkedin" | "instagram" | "youtube" | undefined;
 
-interface Props {
+type Props = {
 	color: ButtonColor,
-	onClick: () => void
+	onClick: (cond: conditions, setTotalPagesState: React.Dispatch<React.SetStateAction<number>>, setResultState: React.Dispatch<React.SetStateAction<{
+		results: any[];
+	}>>) => Promise<void>
 };
 
 const SearchButton: FC<Props> = props => {
