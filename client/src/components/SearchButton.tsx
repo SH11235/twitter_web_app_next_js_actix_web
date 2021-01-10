@@ -5,9 +5,7 @@ type ButtonColor = "red" | "orange" | "yellow" | "olive" | "green" | "teal" | "b
 
 type Props = {
 	color: ButtonColor,
-	onClick: (cond: conditions, setTotalPagesState: React.Dispatch<React.SetStateAction<number>>, setResultState: React.Dispatch<React.SetStateAction<{
-		results: any[];
-	}>>) => Promise<void>
+	onClick: () => void
 };
 
 const SearchButton: FC<Props> = props => {

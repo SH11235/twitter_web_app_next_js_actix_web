@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useCallback } from 'react';
 import { Container, Divider, Header, PaginationProps, Segment } from 'semantic-ui-react';
 import SelectBox from './components/SelectBox';
 import KeyWordBox from './components/KeyWordBox';
@@ -29,7 +29,23 @@ const App: FC = () => {
 		type: 'mixed',
 	});
 
-	const [ keyWordState, setKeyWordState ] = useState('テスト');
+	let urlParamsStr = decodeURI(window.location.search);
+	type paramsType = {
+		word?: string,
+	}
+	let params: paramsType = {};
+	if (urlParamsStr) {
+		//?を除去
+		urlParamsStr = urlParamsStr.substring(1);
+		urlParamsStr.split('&').forEach( param => {
+			const paramKeyVal = param.split('=');
+			params = {
+				...params,
+				[paramKeyVal[0]]: paramKeyVal[1],
+			};
+		});
+	}
+	const [ keyWordState, setKeyWordState ] = useState(params.word ? params.word : 'テスト');
 
 	const [ totalPagesState, setTotalPagesState ] = useState(0);
 
@@ -41,16 +57,30 @@ const App: FC = () => {
 		results: r,
 	});
 
-	useEffect(() => {
+	// keyWordStateを依存配列に加えるとキーワードが変更される度にAPIを叩かれてしまうため、意図的に外している。
+	// この経緯で検索ボタンクリック時の処理は別名の関数として宣言する。
+	const hitSearchAPI = useCallback(() => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
-		}
+		};
 		searchAPI(searchCond, setTotalPagesState, setResultState);
-		return;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [searchCondState.type]);
 
+	const searchButtonClick = () => {
+		const searchCond = {
+			word: keyWordState,
+			type: searchCondState.type,
+		};
+		searchAPI(searchCond, setTotalPagesState, setResultState);
+	}
+
+	useEffect(() => {
+		hitSearchAPI();
+		return;
+		}, [hitSearchAPI]);
+	
 	const handleKeyWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.persist();
 		const value = e.target.value;
@@ -111,7 +141,7 @@ const App: FC = () => {
 			{/* // TODO 表示件数指定のセレクトボックスを作る際にこれをもとにする
 				<SelectBox value={state.view} options={valueOptions} onChange={handleOptionChange} /> 
 			*/}
-			{/* <SearchButton color="twitter" onClick={searchAPI} /> */}
+			<SearchButton color="twitter" onClick={searchButtonClick} />
 			<RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
 		<Divider />

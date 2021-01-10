@@ -30,19 +30,33 @@ export const searchAPI = async (
 			// TODO 表示件数に合わせて変える
 			return json.statuses.length;
 		});
-		const results: resultsType[] = json.statuses.map((item: any) => {
-			const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
-			const tweetLink = `${userLink}/status/${item.id_str}`;
-			return {
-				text: item.text,
-				tweetLink: tweetLink,
-				userLink: userLink,
-				tweetTime: item.created_at,
-				userName: item.user.name,
-				screenName: item.user.screen_name,
-				profileImageUrl: item.user.profile_image_url_https,
-			};
-		});
+		let results: resultsType[];
+		if (json.statuses.length > 0) {
+			results = json.statuses.map((item: any) => {
+				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
+				const tweetLink = `${userLink}/status/${item.id_str}`;
+				return {
+					text: item.text,
+					tweetLink: tweetLink,
+					userLink: userLink,
+					tweetTime: item.created_at,
+					userName: item.user.name,
+					screenName: item.user.screen_name,
+					profileImageUrl: item.user.profile_image_url_https,
+				};
+			});
+		} else {
+			results = [{
+				text: "No Results. Change the search conditions.",
+				tweetLink: "",
+				userLink: "",
+				tweetTime: "",
+				userName: "anyone",
+				screenName: "id",
+				profileImageUrl: "",
+			}];
+		}
+		
 		setResultState(() => {
 			return {
 				results: results,
