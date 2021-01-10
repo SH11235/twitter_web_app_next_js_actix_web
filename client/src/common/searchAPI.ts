@@ -5,10 +5,20 @@ type conditions = {
 	type: string,
 }
 
-const searchAPI = async (
+export type resultsType = Required<{
+	text: string,
+	tweetLink: string,
+	userLink: string,
+	tweetTime: string,
+	userName: string,
+	screenName: string,
+	profileImageUrl: string,
+}>;
+
+export const searchAPI = async (
 	cond: conditions,
 	setTotalPagesState: React.Dispatch<React.SetStateAction<number>>,
-	setResultState: React.Dispatch<React.SetStateAction<{ results: any[];}>>,
+	setResultState: React.Dispatch<React.SetStateAction<{ results: resultsType[];}>>,
 ) => {
 	try {
 		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`];
@@ -20,7 +30,7 @@ const searchAPI = async (
 			// TODO 表示件数に合わせて変える
 			return json.statuses.length;
 		});
-		const results = json.statuses.map((item: any) => {
+		const results: resultsType[] = json.statuses.map((item: any) => {
 			const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
 			const tweetLink = `${userLink}/status/${item.id_str}`;
 			return {
@@ -56,4 +66,3 @@ const searchAPI = async (
 	};
 };
 
-export default searchAPI;

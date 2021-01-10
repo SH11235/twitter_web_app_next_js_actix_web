@@ -6,7 +6,7 @@ import SearchButton from './components/SearchButton';
 import SearchResult from './components/SearchResult';
 import RadioButton from './components/RadioButton';
 import Pager from './components/Pager';
-import searchAPI from './common/searchAPI';
+import {resultsType, searchAPI} from './common/searchAPI';
 
 
 // const valueOptions = [
@@ -22,8 +22,7 @@ const radioOptions = [
 	{  key: 'popular', value: 'popular', text: "popular"},
 ];
 
-// TODO 型付け
-const r: any[] = [];
+const r: resultsType[] | [] = [];
 
 const App: FC = () => {
 	const [ searchCondState, setSearchCondState ] = useState({
@@ -40,7 +39,7 @@ const App: FC = () => {
 
 	const [resultState, setResultState] = useState({
 		results: r,
-	})
+	});
 
 	useEffect(() => {
 		const searchCond = {
