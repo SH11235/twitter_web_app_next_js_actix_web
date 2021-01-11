@@ -143,10 +143,9 @@ const App: FC = () => {
 			<RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
 		<Divider />
-		<Header as="h3">Result: <SelectBox value={viewNumState} options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
-		<Divider />
 		<Segment>
-			<SearchResult results={resultState.results} />
+			<Header as="h3">Result: <SelectBox value={ viewNumState } options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
+			<SearchResult results={ resultState.results } />
 			<Pager totalPages={ totalPagesState } onClick={ handlePageChange } />
 		</Segment>
 	</Container>
