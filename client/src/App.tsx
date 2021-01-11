@@ -10,11 +10,11 @@ import {resultType, searchAPI} from './common/searchAPI';
 
 
 const valueOptions = [
-	{ key: 10, value: '10', text: '10' },
-	{ key: 20, value: '20', text: '20' },
-	{ key: 30, value: '30', text: '30' },
-	{ key: 50, value: '50', text: '50' },
-	{ key: 100, value: '100', text: '100' },
+	{ key: 10, value: 10, text: '10' },
+	{ key: 20, value: 20, text: '20' },
+	{ key: 30, value: 30, text: '30' },
+	{ key: 50, value: 50, text: '50' },
+	{ key: 100, value: 100, text: '100' },
 ];
 
 const radioOptions = [
@@ -64,6 +64,7 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
+			view: viewNumState,
 		};
 		searchAPI(searchCond, setTotalPagesState, setResultState);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,6 +74,7 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
+			view: viewNumState,
 		};
 		searchAPI(searchCond, setTotalPagesState, setResultState);
 	};
@@ -90,12 +92,18 @@ const App: FC = () => {
 		});
 	};
 	
-	const [ viewNumState, setViewNumState ] = useState("10");
+	const [ viewNumState, setViewNumState ] = useState(10);
 	const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		e.persist();
 		const value = e.target.value;
 		setViewNumState(() => {
-			return value;
+			return parseInt(value);
+		});
+		setPageState(() => {
+			return {
+				...pageState,
+				page: 1,
+			};
 		});
 	};
 
@@ -145,7 +153,7 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Result: <SelectBox value={ viewNumState } options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
-			<SearchResult results={ resultState.results } />
+			<SearchResult results={ resultState.results } page={ pageState.page } view={ viewNumState } />
 			<Pager totalPages={ totalPagesState } onClick={ handlePageChange } />
 		</Segment>
 	</Container>

@@ -4,14 +4,21 @@ import { resultType } from '../common/searchAPI';
 
 type Props = {
 	results: resultType[],
+	page: number,
+	view: number,
 };
 
 const SearchResult: FC<Props> = props => {
-	const { results } = props;
-	if (results.length > 0) {
+	const { results, page, view } = props;
+	const startIndex = (page - 1) * view + 1;
+	const endIndex = page * view;
+	const filterResults = results.filter((result, index) => {
+		return (index >= startIndex) && (index <= endIndex);
+	});
+	if (filterResults.length > 0) {
 		return (
 			<Card.Group>
-				{ results.map((item: any, index: number) =>
+				{ filterResults.map((item: resultType, index: number) =>
 					<Card key={index} style={{ width: '328px' }} >
 						<Card.Content>
 							<Card.Header href={item.userLink} target="_blank" rel="noopener noreferrer" >

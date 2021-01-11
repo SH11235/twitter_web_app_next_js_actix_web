@@ -3,6 +3,7 @@ import { twitterBaseURL, searchAPIBaseURL } from './setting';
 type conditions = {
 	word: string,
 	type: string,
+	view: number,
 }
 
 export type resultType = Required<{
@@ -27,8 +28,9 @@ export const searchAPI = async (
 		});
 		const json = await res.json();
 		setTotalPagesState(() => {
-			// TODO 表示件数に合わせて変える
-			return json.statuses.length;
+			const hitNum = json.statuses.length;
+			const totalPages = Math.ceil((hitNum - 1) / cond.view);
+			return totalPages;
 		});
 		let results: resultType[];
 		if (json.statuses.length > 0) {

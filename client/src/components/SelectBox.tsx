@@ -3,11 +3,11 @@ import './SelectBox.css';
 
 type selectOption = {
 	key: number,
-	value: string,
+	value: number,
 	text: string,
 };
 type Props = {
-	value: string,
+	value: number,
 	options: Array<selectOption>,
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 };
