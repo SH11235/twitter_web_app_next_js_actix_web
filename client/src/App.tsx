@@ -6,7 +6,7 @@ import SearchButton from './components/SearchButton';
 import SearchResult from './components/SearchResult';
 import RadioButton from './components/RadioButton';
 import Pager from './components/Pager';
-import {resultsType, searchAPI} from './common/searchAPI';
+import {resultType, searchAPI} from './common/searchAPI';
 
 
 const valueOptions = [
@@ -23,7 +23,7 @@ const radioOptions = [
 	{ key: 'popular', value: 'popular', text: "popular"},
 ];
 
-const r: resultsType[] | [] = [];
+const r: resultType[] | [] = [];
 
 const App: FC = () => {
 	const [ searchCondState, setSearchCondState ] = useState({

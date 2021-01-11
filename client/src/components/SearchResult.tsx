@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Card, Image } from 'semantic-ui-react';
+import { resultType } from '../common/searchAPI';
 
 type Props = {
 	results: any[],

@@ -5,7 +5,7 @@ type conditions = {
 	type: string,
 }
 
-export type resultsType = Required<{
+export type resultType = Required<{
 	text: string,
 	tweetLink: string,
 	userLink: string,
@@ -18,7 +18,7 @@ export type resultsType = Required<{
 export const searchAPI = async (
 	cond: conditions,
 	setTotalPagesState: React.Dispatch<React.SetStateAction<number>>,
-	setResultState: React.Dispatch<React.SetStateAction<{ results: resultsType[];}>>,
+	setResultState: React.Dispatch<React.SetStateAction<{ results: resultType[];}>>,
 ) => {
 	try {
 		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`];
@@ -30,7 +30,7 @@ export const searchAPI = async (
 			// TODO 表示件数に合わせて変える
 			return json.statuses.length;
 		});
-		let results: resultsType[];
+		let results: resultType[];
 		if (json.statuses.length > 0) {
 			results = json.statuses.map((item: any) => {
 				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
