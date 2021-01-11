@@ -49,12 +49,12 @@ impl Twitter {
             .query(&[("q", q), ("count", count), ("result_type", result_type)])
             .headers(headers);
         let res: SearchResult = client.send().await?.json().await?;
-        println!("{:#?}", res);
         Ok(res)
     }
 }
 
 async fn twitter_search(req: HttpRequest) -> HttpResponse {
+    println!("{}", format!("{}?{}", req.path(), req.query_string()));
     let result = Twitter::new().search(req).await;
     match result {
         Ok(json) => HttpResponse::Ok().json(json),
