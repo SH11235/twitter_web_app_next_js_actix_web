@@ -41,7 +41,7 @@ impl Twitter {
         let query_str = _req.query_string();
         let qs = QString::from(query_str);
         let q = qs.get("q").unwrap();
-        let count = qs.get("count").unwrap();
+        let count = "100";
         let result_type = qs.get("type").unwrap();
 
         let client = reqwest::Client::new()
@@ -49,12 +49,12 @@ impl Twitter {
             .query(&[("q", q), ("count", count), ("result_type", result_type)])
             .headers(headers);
         let res: SearchResult = client.send().await?.json().await?;
-        println!("{:#?}", res);
         Ok(res)
     }
 }
 
 async fn twitter_search(req: HttpRequest) -> HttpResponse {
+    println!("{}", format!("{}?{}", req.path(), req.query_string()));
     let result = Twitter::new().search(req).await;
     match result {
         Ok(json) => HttpResponse::Ok().json(json),

@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import './SelectBox.css';
 
 type selectOption = {
-	key: string,
-	value: string,
+	key: number,
+	value: number,
 	text: string,
 };
-interface Props {
-	value: string,
+type Props = {
+	value: number,
 	options: Array<selectOption>,
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
 };

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Input } from 'semantic-ui-react';
 
-interface Props {
+type Props = {
 	word: string,
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 };
