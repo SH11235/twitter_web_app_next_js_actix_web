@@ -1,0 +1,8 @@
+.ui.form.radio-form {
+	margin-top: 10px;
+}
+
+.ui.form .radio-form-field {
+	display: inline-block;
+	width: 7rem;
+}

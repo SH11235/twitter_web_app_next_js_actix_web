@@ -33,7 +33,7 @@ const App: FC = () => {
 	let urlParamsStr = decodeURI(window.location.search);
 	type paramsType = {
 		word?: string,
-	}
+	};
 	let params: paramsType = {};
 	if (urlParamsStr) {
 		//?を除去
