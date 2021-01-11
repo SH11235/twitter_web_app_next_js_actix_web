@@ -56,6 +56,7 @@ const App: FC = () => {
 
 	const [resultState, setResultState] = useState({
 		results: r,
+		count: 0,
 	});
 
 	// keyWordStateを依存配列に加えるとキーワードが変更される度にAPIを叩かれてしまうため、意図的に外している。
@@ -65,7 +66,7 @@ const App: FC = () => {
 			word: keyWordState,
 			type: searchCondState.type,
 		};
-		searchAPI(searchCond, pageState, setPageState, setResultState);
+		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [searchCondState.type]);
 
@@ -74,7 +75,7 @@ const App: FC = () => {
 			word: keyWordState,
 			type: searchCondState.type,
 		};
-		searchAPI(searchCond, pageState, setPageState, setResultState);
+		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 	};
 
 	useEffect(() => {
@@ -93,10 +94,13 @@ const App: FC = () => {
 	const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		e.persist();
 		const view = parseInt(e.target.value);
+		const count = resultState.count;
+		const totalPages = Math.ceil((count - 1) / view);
 		setPageState(() => {
 			return {
 				...pageState,
 				page: 1,
+				totalPages: totalPages,
 				view: view,
 			};
 		});

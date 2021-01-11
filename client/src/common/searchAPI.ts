@@ -29,8 +29,13 @@ export const searchAPI = async (
 		totalPages: number;
 		view: number;
 	}>>,
+	resultState: {
+		results: resultType[];
+		count: number;
+	},
 	setResultState: React.Dispatch<React.SetStateAction<{
 		results: resultType[];
+		count: number;
 	}>>,
 ) => {
 	try {
@@ -39,10 +44,9 @@ export const searchAPI = async (
 			mode: 'cors'
 		});
 		const json = await res.json();
+		const count = json.statuses.length;
 		setPageState(() => {
-			const hitNum = json.statuses.length;
-			const totalPages = Math.ceil((hitNum - 1) / pageState.view);
-			console.log(pageState);
+			const totalPages = Math.ceil((count - 1) / pageState.view);
 			return {
 				...pageState,
 				totalPages: totalPages,
@@ -77,7 +81,9 @@ export const searchAPI = async (
 		
 		setResultState(() => {
 			return {
+				...resultState,
 				results: results,
+				count: count,
 			};
 		});
 	} catch (error) {
@@ -92,7 +98,9 @@ export const searchAPI = async (
 		}];
 		setResultState(() => {
 			return {
+				...resultState,
 				results: results,
+				count: 0,
 			};
 		});
 	};
