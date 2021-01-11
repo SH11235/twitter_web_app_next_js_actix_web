@@ -152,6 +152,7 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Result: <SelectBox value={ pageState.view } options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
+			<Pager pageState={ pageState } onClick={ handlePageChange } />
 			<SearchResult results={ resultState.results } page={ pageState.page } view={ pageState.view } />
 			<Pager pageState={ pageState } onClick={ handlePageChange } />
 		</Segment>

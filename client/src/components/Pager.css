@@ -1,0 +1,5 @@
+.ui.pagination.menu.flex {
+	display: flex;
+	margin: 10px auto;
+	justify-content: center;
+}
