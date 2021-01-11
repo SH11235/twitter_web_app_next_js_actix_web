@@ -48,10 +48,10 @@ const App: FC = () => {
 	}
 	const [ keyWordState, setKeyWordState ] = useState(params.word ? params.word : 'テスト');
 
-	const [ totalPagesState, setTotalPagesState ] = useState(0);
-
 	const [ pageState, setPageState ] = useState({
 		page: 1,
+		totalPages: 0,
+		view: 10,
 	});
 
 	const [resultState, setResultState] = useState({
@@ -64,9 +64,8 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
-			view: viewNumState,
 		};
-		searchAPI(searchCond, setTotalPagesState, setResultState);
+		searchAPI(searchCond, pageState, setPageState, setResultState);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [searchCondState.type]);
 
@@ -74,9 +73,8 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
-			view: viewNumState,
 		};
-		searchAPI(searchCond, setTotalPagesState, setResultState);
+		searchAPI(searchCond, pageState, setPageState, setResultState);
 	};
 
 	useEffect(() => {
@@ -92,17 +90,14 @@ const App: FC = () => {
 		});
 	};
 	
-	const [ viewNumState, setViewNumState ] = useState(10);
 	const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		e.persist();
-		const value = e.target.value;
-		setViewNumState(() => {
-			return parseInt(value);
-		});
+		const view = parseInt(e.target.value);
 		setPageState(() => {
 			return {
 				...pageState,
 				page: 1,
+				view: view,
 			};
 		});
 	};
@@ -124,9 +119,9 @@ const App: FC = () => {
 		} else if (pager === "«") {
 			page = 1;
 		} else if (pager === "⟩") {
-			page = pageState.page === totalPagesState ? totalPagesState : pageState.page + 1;
+			page = pageState.page === pageState.totalPages ? pageState.totalPages : pageState.page + 1;
 		} else if (pager === "»") {
-			page = totalPagesState;
+			page = pageState.totalPages;
 		} else if (pager === "...") {
 			page = pageState.page;
 		} else if (Number.isInteger(pagerToInt)) {
@@ -152,9 +147,9 @@ const App: FC = () => {
 		</Segment>
 		<Divider />
 		<Segment>
-			<Header as="h3">Result: <SelectBox value={ viewNumState } options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
-			<SearchResult results={ resultState.results } page={ pageState.page } view={ viewNumState } />
-			<Pager totalPages={ totalPagesState } onClick={ handlePageChange } />
+			<Header as="h3">Result: <SelectBox value={ pageState.view } options={valueOptions} onChange={handleOptionChange} />件／Page</Header>
+			<SearchResult results={ resultState.results } page={ pageState.page } view={ pageState.view } />
+			<Pager pageState={ pageState } onClick={ handlePageChange } />
 		</Segment>
 	</Container>
 	);

@@ -1,15 +1,19 @@
 import { FC } from 'react';
 import { Pagination, PaginationProps } from 'semantic-ui-react';
 
+
 type Props = {
-	totalPages: number,
+	pageState: {
+		page: number,
+		totalPages: number,
+	},
 	onClick: (e: PaginationProps) => void
 };
 
 const Pager: FC<Props> = props => {
-	const { totalPages, onClick } = props;
+	const { pageState, onClick } = props;
 	return (
-		<Pagination totalPages={ totalPages } onClick={ onClick } />
+		<Pagination activePage={ pageState.page } totalPages={ pageState.totalPages } onClick={ onClick } />
 	);
 };
 

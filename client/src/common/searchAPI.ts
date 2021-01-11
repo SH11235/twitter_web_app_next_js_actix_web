@@ -3,7 +3,6 @@ import { twitterBaseURL, searchAPIBaseURL } from './setting';
 type conditions = {
 	word: string,
 	type: string,
-	view: number,
 }
 
 export type resultType = Required<{
@@ -16,10 +15,23 @@ export type resultType = Required<{
 	profileImageUrl: string,
 }>;
 
+type pageState = {
+	page: number,
+	totalPages: number,
+	view: number,
+}
+
 export const searchAPI = async (
 	cond: conditions,
-	setTotalPagesState: React.Dispatch<React.SetStateAction<number>>,
-	setResultState: React.Dispatch<React.SetStateAction<{ results: resultType[];}>>,
+	pageState: pageState,
+	setPageState: React.Dispatch<React.SetStateAction<{
+		page: number;
+		totalPages: number;
+		view: number;
+	}>>,
+	setResultState: React.Dispatch<React.SetStateAction<{
+		results: resultType[];
+	}>>,
 ) => {
 	try {
 		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`];
@@ -27,10 +39,14 @@ export const searchAPI = async (
 			mode: 'cors'
 		});
 		const json = await res.json();
-		setTotalPagesState(() => {
+		setPageState(() => {
 			const hitNum = json.statuses.length;
-			const totalPages = Math.ceil((hitNum - 1) / cond.view);
-			return totalPages;
+			const totalPages = Math.ceil((hitNum - 1) / pageState.view);
+			console.log(pageState);
+			return {
+				...pageState,
+				totalPages: totalPages,
+			};
 		});
 		let results: resultType[];
 		if (json.statuses.length > 0) {
