@@ -23,7 +23,7 @@ const radioOptions = [
 	{ key: 'popular', value: 'popular', text: "popular"},
 ];
 
-const r: resultType[] | [] = [];
+const r: resultType[] = [];
 
 const App: FC = () => {
 	const [ searchCondState, setSearchCondState ] = useState({
