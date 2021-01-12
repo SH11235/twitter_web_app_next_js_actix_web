@@ -4,13 +4,14 @@ import { Input } from 'semantic-ui-react';
 type Props = {
 	word: string,
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+	onKeyPress: () => void,
 };
 
 const KeyWordBox: FC<Props> = props => {
-	const { word, onChange } = props;
+	const { word, onChange, onKeyPress } = props;
 	return (
 		<>
-		<Input placeholder="Search..." type="text" value={word} onChange={onChange} />
+		<Input placeholder="Search..." type="text" value={word} onChange={onChange} onKeyPress={onKeyPress}/>
 		</>
 	);
 };
