@@ -145,7 +145,7 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
-			<KeyWordBox word={keyWordState} onChange={handleKeyWordChange} />
+			<KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={searchButtonClick} />
 			<SearchButton color="twitter" onClick={searchButtonClick} />
 			<RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
 		</Segment>
