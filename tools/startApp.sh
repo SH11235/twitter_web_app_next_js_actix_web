@@ -17,6 +17,7 @@ if [ "$1" = "start" ]; then
 	mkdir -p log
 	nohup npm run start > log/client.log &
 	echo "client log output: client/log/client.log"
+	echo "http://localhost:3000"
 elif [ "$1" = "stop" ]; then
 	if [ -n $(lsof -t -i:8000) ]; then
 	kill -9 $(lsof -t -i:8000)
