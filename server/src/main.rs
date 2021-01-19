@@ -1,5 +1,7 @@
 use actix_cors::Cors;
+use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
+use env_logger;
 use dotenv::dotenv;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
@@ -54,7 +56,6 @@ impl Twitter {
 }
 
 async fn twitter_search(req: HttpRequest) -> HttpResponse {
-    println!("{}", format!("{}?{}", req.path(), req.query_string()));
     let result = Twitter::new().search(req).await;
     match result {
         Ok(json) => HttpResponse::Ok().json(json),
@@ -64,12 +65,15 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting Twitter API on localhost:8000");
+    env::set_var("RUST_LOG", "info");
+    env_logger::init();
+
     HttpServer::new(|| {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
             .allowed_methods(vec!["GET"]);
         App::new()
+            .wrap(Logger::default())
             .wrap(cors)
             .service(web::resource("/twitter_search").route(web::get().to(twitter_search)))
     })
