@@ -1,8 +1,7 @@
-use actix_cors::Cors;
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
-use env_logger;
 use dotenv::dotenv;
+use env_logger;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
 use serde::{Deserialize, Serialize};
@@ -29,7 +28,7 @@ impl Twitter {
 
     pub async fn search(
         &self,
-        _req: HttpRequest,
+        _req: &HttpRequest,
     ) -> Result<SearchResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
@@ -56,9 +55,36 @@ impl Twitter {
 }
 
 async fn twitter_search(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new().search(req).await;
+    let result = Twitter::new().search(&req).await;
+    // CORS対応
+    let allowed_origin_list = [
+        "http://localhost:3000",
+        "http://ec2-18-191-199-143.us-east-2.compute.amazonaws.com:3000",
+    ];
+    let req_origin = match &req.headers().get("Origin") {
+        Some(o) => o.to_str().unwrap(),
+        None => "",
+    };
+    let mut allow_origin = false;
+    for origin in allowed_origin_list.iter() {
+        if origin == &req_origin {
+            allow_origin = true;
+            break;
+        }
+    }
+
     match result {
-        Ok(json) => HttpResponse::Ok().json(json),
+        Ok(json) => {
+            if allow_origin {
+                HttpResponse::Ok()
+                    .header("Content-Type", "application/json")
+                    .header("Access-Control-Allow-Methods", "GET")
+                    .header("Access-Control-Allow-Origin", req_origin)
+                    .json(json)
+            } else {
+                HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", req_origin))
+            }
+        },
         Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
     }
 }
@@ -69,12 +95,8 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     HttpServer::new(|| {
-        let cors = Cors::default()
-            .allowed_origin("http://localhost:3000")
-            .allowed_methods(vec!["GET"]);
         App::new()
             .wrap(Logger::default())
-            .wrap(cors)
             .service(web::resource("/twitter_search").route(web::get().to(twitter_search)))
     })
     .bind("0.0.0.0:8000")
