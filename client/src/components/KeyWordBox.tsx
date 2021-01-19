@@ -4,7 +4,7 @@ import { Input } from 'semantic-ui-react';
 type Props = {
 	word: string,
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-	onKeyPress: () => void,
+	onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void,
 };
 
 const KeyWordBox: FC<Props> = props => {
