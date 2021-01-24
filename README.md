@@ -1,8 +1,8 @@
 # twitter_api_rust
 
 ## アプリ起動・停止
-tools/startApp.sh start
-tools/startApp.sh stop
+- tools/startApp.sh start
+- tools/startApp.sh stop
 
 ## 動作確認
 
