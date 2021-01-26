@@ -59,7 +59,7 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
     // CORS対応
     let allowed_origin_list = [
         "http://localhost:3000",
-        "http://ec2-18-191-199-143.us-east-2.compute.amazonaws.com:3000",
+        "http://ec2-3-135-220-104.us-east-2.compute.amazonaws.com:3000",
     ];
     let req_origin = match &req.headers().get("Origin") {
         Some(o) => o.to_str().unwrap(),
@@ -67,6 +67,7 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
     };
     let mut allow_origin = false;
     for origin in allowed_origin_list.iter() {
+        println!("{}", &req_origin);
         if origin == &req_origin {
             allow_origin = true;
             break;
