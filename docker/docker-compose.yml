@@ -6,10 +6,13 @@ services:
       - ../service/client:/usr/src/twittersearch/client
     ports:
       - "3000:3000"
+    container_name: twitter-search-client
+    hostname: twitter-search-client
   server:
     build: ./services/server
     volumes:
       - ../service/server:/usr/src/twittersearch/server
     ports:
       - "8000:8000"
-    tty: true
+    container_name: twitter-search-server
+    hostname: twitter-search-server
