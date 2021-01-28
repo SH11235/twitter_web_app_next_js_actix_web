@@ -1,5 +1,11 @@
 # twitter_api_rust
 
+## 環境
+- node.js 14.4
+- rustc 1.49
+- cargo 1.49
+- rustup 1.23.1
+
 ## docker環境でのアプリ起動
 ### docker. docker-composeのインストール
 公式ドキュメントを見る。
@@ -14,12 +20,6 @@
 ### docker起動
 - （再）起動：tools/startDocker.sh start
 - 停止：tools/startDocker.sh stop
-
-## 環境
-- node.js 14.4
-- rustc 1.49
-- cargo 1.49
-- rustup 1.23.1
 
 ## （dockerを使わない場合の）アプリ起動・停止
 - （再）起動：tools/startApp.sh start
