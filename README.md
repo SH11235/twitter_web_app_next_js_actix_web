@@ -6,6 +6,11 @@
 - https://docs.docker.com/get-docker/
 - https://docs.docker.jp/compose/install.html#linux-compose
 
+### 他
+- cd service/client/web && npm install
+- mkdir servie/client/web/log
+- mkdir servie/server/web/log
+
 ### docker起動
 - （再）起動：tools/startDocker.sh start
 - 停止：tools/startDocker.sh stop
