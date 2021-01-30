@@ -27,7 +27,10 @@
 
 ## 動作確認
 ### server
-- http://localhost:8000
+- キーワード「keyword」で検索した結果
+http://localhost:8000/twitter_search?q=keyword&type=mixed
+jsonが返ってきていれば動作OK
 
 ### client
-- http://localhost:3000で起動
+- 検索画面
+http://localhost:3000

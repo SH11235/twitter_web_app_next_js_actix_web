@@ -59,15 +59,18 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
     // CORS対応
     let allowed_origin_list = [
         "http://localhost:3000",
+        "http://localhost:8000",
         "http://ec2-3-135-220-104.us-east-2.compute.amazonaws.com:3000",
     ];
+    let mut allow_origin = false;
     let req_origin = match &req.headers().get("Origin") {
         Some(o) => o.to_str().unwrap(),
-        None => "",
+        None => {
+            allow_origin = true;
+            ""
+        },
     };
-    let mut allow_origin = false;
     for origin in allowed_origin_list.iter() {
-        println!("{}", &req_origin);
         if origin == &req_origin {
             allow_origin = true;
             break;
@@ -80,7 +83,7 @@ async fn twitter_search(req: HttpRequest) -> HttpResponse {
                 HttpResponse::Ok()
                     .header("Content-Type", "application/json")
                     .header("Access-Control-Allow-Methods", "GET")
-                    .header("Access-Control-Allow-Origin", req_origin)
+                    .header("Access-Control-Allow-Origin", "*")
                     .json(json)
             } else {
                 HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", req_origin))
