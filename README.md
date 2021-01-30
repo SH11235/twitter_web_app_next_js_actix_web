@@ -13,15 +13,15 @@
 - https://docs.docker.jp/compose/install.html#linux-compose
 
 ### node.jsのインストール
-- Ubuntu 20.04
-aptでインストール
+- Ubuntu 20.04<br>
+aptでインストール<br>
 https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-ja
 
-- 複数バージョンのnodeを使う場合
-anyenvなどを利用して入れる
+- 複数バージョンのnodeを使う場合<br>
+anyenvなどを利用して入れる<br>
 https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
 
-- パッケージのインストール
+- パッケージのインストール<br>
 cd service/client/web && npm install
 
 ### ログ用のディレクトリを作る
