@@ -12,8 +12,19 @@
 - https://docs.docker.com/get-docker/
 - https://docs.docker.jp/compose/install.html#linux-compose
 
-### 他
-- cd service/client/web && npm install
+### node.jsのインストール
+- Ubuntu 20.04
+aptでインストール
+https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-ja
+
+- 複数バージョンのnodeを使う場合
+anyenvなどを利用して入れる
+https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
+
+- パッケージのインストール
+cd service/client/web && npm install
+
+### ログ用のディレクトリを作る
 - mkdir servie/client/web/log
 - mkdir servie/server/web/log
 
