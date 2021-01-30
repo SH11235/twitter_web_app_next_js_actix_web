@@ -25,8 +25,8 @@ https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
 cd service/client/web && npm install
 
 ### ログ用のディレクトリを作る
-- mkdir servie/client/web/log
-- mkdir servie/server/web/log
+- mkdir service/client/web/log
+- mkdir service/server/web/log
 
 ### docker起動
 - （再）起動：tools/startDocker.sh start
