@@ -51,6 +51,7 @@ export const searchAPI = async (
 				const totalPages = Math.ceil((count - 1) / pageState.view);
 				return {
 					...pageState,
+					page: 1,
 					totalPages: totalPages,
 				};
 			});
