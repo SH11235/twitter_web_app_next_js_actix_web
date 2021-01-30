@@ -45,15 +45,15 @@ export const searchAPI = async (
 		});
 		const json = await res.json();
 		const count = json.statuses.length;
-		setPageState(() => {
-			const totalPages = Math.ceil((count - 1) / pageState.view);
-			return {
-				...pageState,
-				totalPages: totalPages,
-			};
-		});
 		let results: resultType[];
 		if (json.statuses.length > 0) {
+			setPageState(() => {
+				const totalPages = Math.ceil((count - 1) / pageState.view);
+				return {
+					...pageState,
+					totalPages: totalPages,
+				};
+			});
 			results = json.statuses.map((item: any) => {
 				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
 				const tweetLink = `${userLink}/status/${item.id_str}`;
