@@ -2,7 +2,7 @@ use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use env_logger;
 use std::env;
-use twitter::twitter::twitter_search;
+use twitter::twitter::run_search;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {

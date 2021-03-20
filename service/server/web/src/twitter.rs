@@ -4,6 +4,7 @@ use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use serde_json::Value::Array;
 use std::env;
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchResult {
@@ -47,7 +48,6 @@ impl Twitter {
 }
 
 pub async fn run_search(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new().search(&req).await;
     // CORS対応
     let allowed_origin_list = [
         "http://localhost:3000",
@@ -66,18 +66,31 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         }
     }
 
-    match result {
-        Ok(json) => {
-            if allow_origin {
-                HttpResponse::Ok()
-                    .header("Content-Type", "application/json")
-                    .header("Access-Control-Allow-Methods", "GET")
-                    .header("Access-Control-Allow-Origin", "*")
-                    .json(json)
-            } else {
-                HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", req_origin))
-            }
+    let mut values: Vec<Value> = vec![];
+    let twitter = Twitter::new();
+    let mut result : Result<SearchResult, Box<dyn std::error::Error>>;
+//    let mut next_results = "";
+    let request = &req;
+
+    for _ in 0..9 {
+        result = twitter.search(&request).await;
+        match result {
+            Ok(res) => {
+//                next_results = res.search_metadata["next_results"].as_str().unwrap();
+                values.push(Array(res.statuses));
+                // request = ???
+            },
+            Err(err) => println!("{:?}", err),
         }
-        Err(err) => HttpResponse::InternalServerError().body(err.to_string()),
+    }
+
+    if allow_origin {
+        HttpResponse::Ok()
+            .header("Content-Type", "application/json")
+            .header("Access-Control-Allow-Methods", "GET")
+            .header("Access-Control-Allow-Origin", "*")
+            .json(values)
+    } else {
+        HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", req_origin))
     }
 }
