@@ -57,10 +57,7 @@ pub async fn twitter_search(req: HttpRequest) -> HttpResponse {
     let mut allow_origin = false;
     let req_origin = match &req.headers().get("Origin") {
         Some(o) => o.to_str().unwrap(),
-        None => {
-            allow_origin = true;
-            ""
-        }
+        None => ""
     };
     for origin in allowed_origin_list.iter() {
         if origin == &req_origin {
