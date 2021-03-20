@@ -46,7 +46,7 @@ impl Twitter {
     }
 }
 
-pub async fn twitter_search(req: HttpRequest) -> HttpResponse {
+pub async fn run_search(req: HttpRequest) -> HttpResponse {
     let result = Twitter::new().search(&req).await;
     // CORS対応
     let allowed_origin_list = [
