@@ -45,9 +45,11 @@ impl Twitter {
             AUTHORIZATION,
             format!("Bearer {}", &self.bearer_token).parse().unwrap(),
         );
+        let qs = QString::from(next_results.as_str());
+        let max_id = qs.get("max_id").unwrap_or("0").to_string();
         let client = reqwest::Client::new()
             .get(endpoint)
-            .query(&next_results)
+            .query(&[("q", &self.q), ("count", &self.count), ("result_type", &self.result_type), ("max_id", &max_id)])
             .headers(headers);
         let res: SearchResult = client.send().await?.json().await?;
         Ok(res)
@@ -63,14 +65,13 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         "http://localhost:8000",
         "http://ec2-3-135-220-104.us-east-2.compute.amazonaws.com:3000",
     ];
-    let mut allow_origin = false;
+    let mut allow_origin = true;
     for origin in allowed_origin_list.iter() {
         if origin == &twitter.origin {
             allow_origin = true;
             break;
         }
     }
-
     let mut values: Vec<Value> = vec![];
     let mut result : Result<SearchResult, Box<dyn std::error::Error>>;
     let mut next_results = format!("?q={}&count={}&result_type={}",&twitter.q,&twitter.count,&twitter.result_type);
