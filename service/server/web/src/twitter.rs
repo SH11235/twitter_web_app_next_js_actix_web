@@ -105,32 +105,8 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
 pub async fn write_tweet(req: HttpRequest) -> HttpResponse {
     let result = Twitter::new().search(&req).await.unwrap();
     let tweets = result.statuses;
-    // let mut tweet_vec: Vec<NewTweet>;
-    // let twitter_base_URL = "https://twitter.com";
-    // for tweet in tweets.iter() {
-    //     let text = &tweet.text;
-    //     let user_link = format!("{}{}{}", &twitter_base_URL, "/", tweet.user.screen_name);
-    //     let tweet_link = format!("{}{}{}", user_link, "/status/", tweet.id_str);
-    //     let tweet_time = &tweet.created_at;
-    //     let user_name = &tweet.user.name;
-    //     let screen_name = &tweet.user.screen_name;
-    //     let profile_image_url = &tweet.user.profile_image_url_https;
-
-    //     tweet_vec.push(NewTweet {
-    //         text: &text.clone(),
-    //         tweetlink: &tweet_link,
-    //         userlink: &user_link,
-    //         tweettime: &tweet_time,
-    //         username: &user_name,
-    //         screenname: &screen_name,
-    //         profileimageurl: &profile_image_url,
-    //     });
-    // }
-    println!("{:?}", tweets.len());
-
     let connection = establish_connection();
     let _write_tweet_to_db = write_tweet_to_db(&connection, &tweets);
-    // println!("{:?}", write);
 
     HttpResponse::Ok().json(&tweets)
 }
