@@ -1,4 +1,4 @@
-use super::{establish_connection, write_tweet_to_db};
+use super::{establish_connection, register_tweet_to_db};
 // use crate::models::NewTweet;
 use actix_web::{HttpRequest, HttpResponse};
 use dotenv::dotenv;
@@ -102,11 +102,11 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     }
 }
 
-pub async fn write_tweet(req: HttpRequest) -> HttpResponse {
+pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
     let result = Twitter::new().search(&req).await.unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
-    let _write_tweet_to_db = write_tweet_to_db(&connection, &tweets);
+    let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
 
     HttpResponse::Ok().json(&tweets)
 }

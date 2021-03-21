@@ -20,7 +20,7 @@ pub fn establish_connection() -> PgConnection {
     PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn write_tweet_to_db<'a>(conn: &PgConnection, tweets: &Vec<twitter::Tweet>) {
+pub fn register_tweet_to_db<'a>(conn: &PgConnection, tweets: &Vec<twitter::Tweet>) {
     use schema::tweets;
 
     let twitter_base_url = "https://twitter.com";
