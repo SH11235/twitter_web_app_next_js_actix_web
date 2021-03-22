@@ -1,5 +1,4 @@
-use super::{establish_connection, register_tweet_to_db};
-// use crate::models::NewTweet;
+// external crate
 use actix_web::{HttpRequest, HttpResponse};
 use dotenv::dotenv;
 use qstring::QString;
@@ -7,6 +6,9 @@ use reqwest::header::{HeaderMap, AUTHORIZATION};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::env;
+
+// lib.rs
+use super::{establish_connection, register_tweet_to_db};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchResult {

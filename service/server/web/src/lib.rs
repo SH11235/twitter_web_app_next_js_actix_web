@@ -1,16 +1,17 @@
-pub mod models;
-pub mod schema;
-
+// external crate
 #[macro_use]
 extern crate diesel;
 extern crate dotenv;
 
-use dotenv::dotenv;
-use std::env;
-pub mod twitter;
-
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
+use dotenv::dotenv;
+use std::env;
+
+// modules
+pub mod models;
+pub mod schema;
+pub mod twitter;
 use models::{NewTweet, Tweet};
 
 pub fn establish_connection() -> PgConnection {
