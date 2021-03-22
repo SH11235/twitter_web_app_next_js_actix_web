@@ -35,7 +35,7 @@ impl Twitter {
         Twitter {}
     }
 
-    pub async fn search(
+    pub async fn hit_search_api(
         &self,
         _req: &HttpRequest,
     ) -> Result<SearchResult, Box<dyn std::error::Error>> {
@@ -64,7 +64,7 @@ impl Twitter {
 }
 
 pub async fn run_search(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new().search(&req).await;
+    let result = Twitter::new().hit_search_api(&req).await;
     // CORS対応
     let allowed_origin_list = [
         "http://localhost:3000",
@@ -103,7 +103,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
 }
 
 pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new().search(&req).await.unwrap();
+    let result = Twitter::new().hit_search_api(&req).await.unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
     let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
