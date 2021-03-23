@@ -11,20 +11,20 @@ use std::env;
 use super::{establish_connection, register_tweet_to_db};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SearchResult {
+struct SearchAPIResult {
     search_metadata: Value,
-    statuses: Vec<Tweet>,
+    statuses: Vec<TweetInfo>,
 }
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Tweet {
+pub struct TweetInfo {
     pub text: String,
-    pub user: User,
+    pub user: TweetUser,
     pub id_str: String,
     pub created_at: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct User {
+pub struct TweetUser {
     pub name: String,
     pub screen_name: String,
     pub profile_image_url_https: String,
@@ -40,7 +40,7 @@ impl Twitter {
     pub async fn hit_search_api(
         &self,
         _req: &HttpRequest,
-    ) -> Result<SearchResult, Box<dyn std::error::Error>> {
+    ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
         // .envファイルのトークンの値を読み込む
@@ -60,7 +60,7 @@ impl Twitter {
             .get(endpoint)
             .query(&[("q", q), ("count", count), ("result_type", result_type)])
             .headers(headers);
-        let res: SearchResult = client.send().await?.json().await?;
+        let res: SearchAPIResult = client.send().await?.json().await?;
         Ok(res)
     }
 }
