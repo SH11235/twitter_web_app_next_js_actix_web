@@ -44,9 +44,9 @@ export const searchAPI = async (
 			mode: 'cors'
 		});
 		const json = await res.json();
-		const count = json.statuses.length;
+		const count = json.length;
 		let results: resultType[];
-		if (json.statuses.length > 0) {
+		if (json.length > 0) {
 			setPageState(() => {
 				const totalPages = Math.ceil((count - 1) / pageState.view);
 				return {
@@ -55,7 +55,7 @@ export const searchAPI = async (
 					totalPages: totalPages,
 				};
 			});
-			results = json.statuses.map((item: any) => {
+			results = json.map((item: any) => {
 				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
 				const tweetLink = `${userLink}/status/${item.id_str}`;
 				return {
@@ -88,6 +88,7 @@ export const searchAPI = async (
 			};
 		});
 	} catch (error) {
+		console.error(error);
 		const results = [{
 			text: "アクセス制限中",
 			tweetLink: "",

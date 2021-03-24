@@ -3,8 +3,6 @@ use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use env_logger;
 use std::env;
-
-// twitter.rs
 use twitter_search::twitter::{register_tweet, run_search};
 
 #[actix_rt::main]
