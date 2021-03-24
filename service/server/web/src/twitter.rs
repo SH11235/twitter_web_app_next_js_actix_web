@@ -54,7 +54,7 @@ impl Twitter {
 
     pub async fn hit_search_api(
         &self,next_results: &String
-        ) -> Result<SearchResult, Box<dyn std::error::Error>> {
+        ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
         headers.insert(
@@ -82,34 +82,31 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         "http://ec2-3-135-220-104.us-east-2.compute.amazonaws.com:3000",
     ];
     let mut allow_origin = false;
-    let req_origin = match &req.headers().get("Origin") {
-        Some(o) => o.to_str().unwrap(),
-        None => {
-            allow_origin = true; // localhost:8000に直接アクセスするとOriginがNullになるのでこの場合は許可する
-            ""
-        }
-    };
+    let req_origin = &twitter.origin;
     for origin in allowed_origin_list.iter() {
-        if origin == &twitter.origin {
+        if origin == req_origin {
             allow_origin = true;
             break;
         }
+    }
+    if req_origin == "" {
+        allow_origin = true;
     }
     
     if !allow_origin {
     return HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", &twitter.origin));
     }
 
-    let mut values: Vec<Value> = vec![];
-    let mut result : Result<SearchResult, Box<dyn std::error::Error>>;
+    let mut values: Vec<TweetInfo> = vec![];
+    let mut result : Result<SearchAPIResult, Box<dyn std::error::Error>>;
     let mut next_results = format!("?q={}&count={}&result_type={}",&twitter.q,&twitter.count,&twitter.result_type);
 
     for _ in 0..10 {
-        result = twitter.search(&next_results).await;
+        result = twitter.hit_search_api(&next_results).await;
         match result {
             Ok(res) => {
                 next_results = res.search_metadata["next_results"].as_str().unwrap().to_string();
-                values.push(Value::Array(res.statuses));
+                values.extend(res.statuses);
             },
             Err(err) => {
                 return HttpResponse::InternalServerError().body(err.to_string());
@@ -125,7 +122,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
 }
 
 pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new().hit_search_api(&req).await.unwrap();
+    let result = Twitter::new(req).hit_search_api(&"".to_string()).await.unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
     let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
