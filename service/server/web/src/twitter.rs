@@ -47,14 +47,18 @@ impl Twitter {
             q: qs.get("q").unwrap().to_string(),
             count: "100".to_string(),
             result_type: qs.get("type").unwrap().to_string(),
-            origin: match req.headers().get("Origin") {Some(o) => o.to_str().unwrap().to_string(), None => "".to_string()},
-            bearer_token: env::var("bearer_token").expect("bearer_token is not found")
+            origin: match req.headers().get("Origin") {
+                Some(o) => o.to_str().unwrap().to_string(),
+                None => "".to_string(),
+            },
+            bearer_token: env::var("bearer_token").expect("bearer_token is not found"),
         }
     }
 
     pub async fn hit_search_api(
-        &self,next_results: &String
-        ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
+        &self,
+        next_results: &String,
+    ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
         headers.insert(
@@ -65,7 +69,12 @@ impl Twitter {
         let max_id = qs.get("max_id").unwrap_or("0").to_string();
         let client = reqwest::Client::new()
             .get(endpoint)
-            .query(&[("q", &self.q), ("count", &self.count), ("result_type", &self.result_type), ("max_id", &max_id)])
+            .query(&[
+                ("q", &self.q),
+                ("count", &self.count),
+                ("result_type", &self.result_type),
+                ("max_id", &max_id),
+            ])
             .headers(headers);
         let res: SearchAPIResult = client.send().await?.json().await?;
         Ok(res)
@@ -92,22 +101,28 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     if req_origin == "" {
         allow_origin = true;
     }
-    
+
     if !allow_origin {
-    return HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", &twitter.origin));
+        return HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", &twitter.origin));
     }
 
     let mut values: Vec<TweetInfo> = vec![];
-    let mut result : Result<SearchAPIResult, Box<dyn std::error::Error>>;
-    let mut next_results = format!("?q={}&count={}&result_type={}",&twitter.q,&twitter.count,&twitter.result_type);
+    let mut result: Result<SearchAPIResult, Box<dyn std::error::Error>>;
+    let mut next_results = format!(
+        "?q={}&count={}&result_type={}",
+        &twitter.q, &twitter.count, &twitter.result_type
+    );
 
     for _ in 0..10 {
         result = twitter.hit_search_api(&next_results).await;
         match result {
             Ok(res) => {
-                next_results = res.search_metadata["next_results"].as_str().unwrap().to_string();
+                next_results = res.search_metadata["next_results"]
+                    .as_str()
+                    .unwrap_or("")
+                    .to_string();
                 values.extend(res.statuses);
-            },
+            }
             Err(err) => {
                 return HttpResponse::InternalServerError().body(err.to_string());
             }
@@ -122,7 +137,10 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
 }
 
 pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new(req).hit_search_api(&"".to_string()).await.unwrap();
+    let result = Twitter::new(req)
+        .hit_search_api(&"hoge".to_string())
+        .await
+        .unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
     let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
