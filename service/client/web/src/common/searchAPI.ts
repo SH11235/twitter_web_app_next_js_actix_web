@@ -88,6 +88,7 @@ export const searchAPI = async (
 			};
 		});
 	} catch (error) {
+		console.error(error);
 		const results = [{
 			text: "アクセス制限中",
 			tweetLink: "",
