@@ -30,17 +30,22 @@
 - パッケージのインストール<br>
   cd service/client/web && npm install
 
-### ログ用のディレクトリを作る
+### ログ用のディレクトリ
 
 - mkdir service/client/web/log
 - mkdir service/server/web/log
 
-### docker 起動
+### docker を使ってのアプリ起動
 
 - （再）起動：tools/startDocker.sh start
 - 停止：tools/startDocker.sh stop
 
-## （docker を使わない場合の）アプリ起動・停止
+### コンテナに入るコマンド
+
+- client：cd docker && docker-compose exec client
+- server：cd docker && docker-compose exec server
+
+## docker を使わない場合のアプリ起動・停止
 
 - （再）起動：tools/startApp.sh start
 - 停止：tools/startApp.sh stop

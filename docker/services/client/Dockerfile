@@ -2,6 +2,6 @@ FROM node:14-alpine
 
 WORKDIR /usr/src/twittersearch/client/web
 
-RUN mkdir ./log
+RUN npm install
 
-CMD npm run clean && npm ci && npm run start > ./log/client.log && ash
+CMD npm run clean && npm ci && npm run start
