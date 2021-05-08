@@ -38,19 +38,21 @@ struct Twitter {
     bearer_token: String,
 }
 
+struct ApiParams {
+    q: String,
+    result_type: String,
+    origin: String,
+}
+
 impl Twitter {
-    pub fn new(req: HttpRequest) -> Self {
+    pub fn new(params: ApiParams) -> Self {
         // .envファイルのトークンの値を読み込む
         dotenv().ok();
-        let qs = QString::from(req.query_string());
         Twitter {
-            q: qs.get("q").unwrap().to_string(),
+            q: params.q,
             count: "100".to_string(),
-            result_type: qs.get("type").unwrap().to_string(),
-            origin: match req.headers().get("Origin") {
-                Some(o) => o.to_str().unwrap().to_string(),
-                None => "".to_string(),
-            },
+            result_type: params.result_type,
+            origin: params.origin,
             bearer_token: env::var("bearer_token").expect("bearer_token is not found"),
         }
     }
@@ -82,7 +84,16 @@ impl Twitter {
 }
 
 pub async fn run_search(req: HttpRequest) -> HttpResponse {
-    let twitter = Twitter::new(req);
+    let qs = QString::from(req.query_string());
+    let params = ApiParams {
+        q: qs.get("q").unwrap().to_string(),
+        result_type: qs.get("type").unwrap().to_string(),
+        origin: match req.headers().get("Origin") {
+            Some(o) => o.to_str().unwrap().to_string(),
+            None => "".to_string(),
+        },
+    };
+    let twitter = Twitter::new(params);
 
     // CORS対応
     let allowed_origin_list = [
@@ -137,7 +148,16 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
 }
 
 pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
-    let result = Twitter::new(req)
+    let qs = QString::from(req.query_string());
+    let params = ApiParams {
+        q: qs.get("q").unwrap().to_string(),
+        result_type: qs.get("type").unwrap().to_string(),
+        origin: match req.headers().get("Origin") {
+            Some(o) => o.to_str().unwrap().to_string(),
+            None => "".to_string(),
+        },
+    };
+    let result = Twitter::new(params)
         .hit_search_api(&"hoge".to_string())
         .await
         .unwrap();
