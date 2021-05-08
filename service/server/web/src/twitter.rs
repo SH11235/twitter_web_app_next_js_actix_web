@@ -8,7 +8,7 @@ use serde_json::Value;
 use std::env;
 
 // lib.rs
-use super::{establish_connection, register_api_result, NewTweet};
+use super::{establish_connection, register_api_result, register_tweet_to_db, NewTweet};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchAPIResult {
@@ -168,11 +168,18 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     HttpResponse::Ok().json(&tweets)
 }
 
-#[post("/postjson")]
-pub async fn register_favorite_tweet(info: web::Json<NewTweet>) -> String {
-    println!("{:?}", info);
-    format!(
-        "text: {} tweetlink {} userlink: {}",
-        info.text, info.tweetlink, info.userlink
-    )
+#[post("/register_favorite_tweet")]
+pub async fn register_favorite_tweet(tweet: web::Json<NewTweet>) -> String {
+    let connection = establish_connection();
+    let favorite_tweet = NewTweet {
+        text: tweet.text.to_string(),
+        tweetlink: tweet.tweetlink.to_string(),
+        userlink: tweet.userlink.to_string(),
+        tweettime: tweet.tweettime.to_string(),
+        username: tweet.username.to_string(),
+        screenname: tweet.screenname.to_string(),
+        profileimageurl: tweet.profileimageurl.to_string(),
+    };
+    let _register_api_result = register_tweet_to_db(&connection, favorite_tweet);
+    "register tweet".to_string()
 }
