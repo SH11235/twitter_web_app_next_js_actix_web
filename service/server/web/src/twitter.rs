@@ -1,5 +1,5 @@
 // external crate
-use actix_web::{HttpRequest, HttpResponse};
+use actix_web::{post, web, HttpRequest, HttpResponse};
 use dotenv::dotenv;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
@@ -8,7 +8,7 @@ use serde_json::Value;
 use std::env;
 
 // lib.rs
-use super::{establish_connection, register_tweet_to_db};
+use super::{establish_connection, register_api_result, NewTweet};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchAPIResult {
@@ -147,7 +147,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         .json(values)
 }
 
-pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
+pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
@@ -163,7 +163,16 @@ pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
         .unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
-    let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
+    let _register_api_result = register_api_result(&connection, &tweets);
 
     HttpResponse::Ok().json(&tweets)
+}
+
+#[post("/postjson")]
+pub async fn register_favorite_tweet(info: web::Json<NewTweet>) -> String {
+    println!("{:?}", info);
+    format!(
+        "text: {} tweetlink {} userlink: {}",
+        info.text, info.tweetlink, info.userlink
+    )
 }
