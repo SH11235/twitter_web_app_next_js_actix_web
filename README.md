@@ -28,12 +28,12 @@
   https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
 
 - パッケージのインストール<br>
-  cd service/client/web && npm install
+  cd service/web/client && npm install
 
 ### ログ用のディレクトリ
 
-- mkdir service/client/web/log
-- mkdir service/server/web/log
+- mkdir service/web/client/log
+- mkdir service/web/server/log
 
 ### docker を使ってのアプリ起動
 
@@ -52,7 +52,9 @@
 
 ## diesel
 
-- cd service/server/web
+postgres が起動した状態で
+
+- cd service/web/server
 - diesel migration run
 
 ## 動作確認
