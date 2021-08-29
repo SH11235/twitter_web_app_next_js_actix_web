@@ -3,9 +3,9 @@
 ## 環境
 
 - node.js 14.4
-- rustc 1.49
-- cargo 1.49
-- rustup 1.23.1
+- rustc 1.54
+- cargo 1.54
+- rustup 1.24.3
 - postgres 13.2
 
 ## docker 環境でのアプリ起動
