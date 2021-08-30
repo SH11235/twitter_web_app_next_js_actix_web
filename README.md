@@ -52,9 +52,9 @@
 
 ## diesel
 
-postgres が起動した状態で
-
+- cargo install diesel_cli
 - cd service/web/server
+  postgres が起動した状態で migration する
 - diesel migration run
 
 ## 動作確認
