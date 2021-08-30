@@ -3,7 +3,7 @@ services:
   client:
     build: ./services/client
     volumes:
-      - ../service/client:/usr/src/twittersearch/client
+      - ../service/web/client:/usr/src/twittersearch/client
     ports:
       - "3000:3000"
     container_name: twitter-search-client
@@ -11,7 +11,7 @@ services:
   server:
     build: ./services/server
     volumes:
-      - ../service/server:/usr/src/twittersearch/server
+      - ../service/web/server:/usr/src/twittersearch/server
     ports:
       - "8000:8000"
     container_name: twitter-search-server
