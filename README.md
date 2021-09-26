@@ -3,9 +3,9 @@
 ## 環境
 
 - node.js 14.4
-- rustc 1.49
-- cargo 1.49
-- rustup 1.23.1
+- rustc 1.54
+- cargo 1.54
+- rustup 1.24.3
 - postgres 13.2
 
 ## docker 環境でのアプリ起動
@@ -28,12 +28,12 @@
   https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
 
 - パッケージのインストール<br>
-  cd service/client/web && npm install
+  cd service/web/client && npm install
 
 ### ログ用のディレクトリ
 
-- mkdir service/client/web/log
-- mkdir service/server/web/log
+- mkdir service/web/client/log
+- mkdir service/web/server/log
 
 ### docker を使ってのアプリ起動
 
@@ -52,7 +52,9 @@
 
 ## diesel
 
-- cd service/server/web
+- cargo install diesel_cli
+- cd service/web/server
+  postgres が起動した状態で migration する
 - diesel migration run
 
 ## 動作確認

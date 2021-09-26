@@ -1,6 +1,6 @@
 FROM node:14-alpine
 
-WORKDIR /usr/src/twittersearch/client/web
+WORKDIR /usr/src/twittersearch/client
 
 RUN npm install
 
