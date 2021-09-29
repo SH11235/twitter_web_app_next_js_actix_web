@@ -3,12 +3,12 @@ use serde::Deserialize;
 pub struct Tweet {
     pub id: i32,
     pub text: String,
-    pub tweetlink: String,
-    pub userlink: String,
-    pub tweettime: String,
-    pub username: String,
-    pub screenname: String,
-    pub profileimageurl: String,
+    pub tweet_link: String,
+    pub user_link: String,
+    pub tweet_time: String,
+    pub user_name: String,
+    pub screen_name: String,
+    pub profile_image_url: String,
 }
 
 use super::schema::tweets;
@@ -17,10 +17,10 @@ use super::schema::tweets;
 #[table_name = "tweets"]
 pub struct NewTweet {
     pub text: String,
-    pub tweetlink: String,
-    pub userlink: String,
-    pub tweettime: String,
-    pub username: String,
-    pub screenname: String,
-    pub profileimageurl: String,
+    pub tweet_link: String,
+    pub user_link: String,
+    pub tweet_time: String,
+    pub user_name: String,
+    pub screen_name: String,
+    pub profile_image_url: String,
 }

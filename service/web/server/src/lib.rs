@@ -34,12 +34,12 @@ pub fn register_api_result<'a>(conn: &PgConnection, tweets: &Vec<twitter::TweetI
 
         let tweet_vec = NewTweet {
             text: text.to_string(),
-            tweetlink: tweet_link,
-            userlink: user_link,
-            tweettime: tweet_time.to_string(),
-            username: user_name.to_string(),
-            screenname: screen_name.to_string(),
-            profileimageurl: profile_image_url.to_string(),
+            tweet_link: tweet_link,
+            user_link: user_link,
+            tweet_time: tweet_time.to_string(),
+            user_name: user_name.to_string(),
+            screen_name: screen_name.to_string(),
+            profile_image_url: profile_image_url.to_string(),
         };
         register_tweet_to_db(conn, tweet_vec);
     }

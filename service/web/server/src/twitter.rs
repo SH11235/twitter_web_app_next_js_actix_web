@@ -178,12 +178,12 @@ pub async fn register_favorite_tweet(tweet: web::Json<NewTweet>) -> String {
     let connection = establish_connection();
     let favorite_tweet = NewTweet {
         text: tweet.text.to_string(),
-        tweetlink: tweet.tweetlink.to_string(),
-        userlink: tweet.userlink.to_string(),
-        tweettime: tweet.tweettime.to_string(),
-        username: tweet.username.to_string(),
-        screenname: tweet.screenname.to_string(),
-        profileimageurl: tweet.profileimageurl.to_string(),
+        tweet_link: tweet.tweet_link.to_string(),
+        user_link: tweet.user_link.to_string(),
+        tweet_time: tweet.tweet_time.to_string(),
+        user_name: tweet.user_name.to_string(),
+        screen_name: tweet.screen_name.to_string(),
+        profile_image_url: tweet.profile_image_url.to_string(),
     };
     let _register_api_result = register_tweet_to_db(&connection, favorite_tweet);
     "register tweet".to_string()
