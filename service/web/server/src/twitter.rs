@@ -59,7 +59,7 @@ impl Twitter {
 
     pub async fn hit_search_api(
         &self,
-        next_results: &String,
+        next_results: Option<&String>,
     ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
@@ -67,8 +67,13 @@ impl Twitter {
             AUTHORIZATION,
             format!("Bearer {}", &self.bearer_token).parse().unwrap(),
         );
-        let qs = QString::from(next_results.as_str());
-        let max_id = qs.get("max_id").unwrap_or("0").to_string();
+        let max_id = match next_results {
+            None => "".to_string(),
+            Some(params) => {
+                let qs = QString::from(params.as_str());
+                qs.get("max_id").unwrap_or("0").to_string()
+            }
+        };
         let client = reqwest::Client::new()
             .get(endpoint)
             .query(&[
@@ -125,7 +130,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     );
 
     for _ in 0..10 {
-        result = twitter.hit_search_api(&next_results).await;
+        result = twitter.hit_search_api(Some(&next_results)).await;
         match result {
             Ok(res) => {
                 next_results = res.search_metadata["next_results"]
@@ -158,7 +163,7 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
         },
     };
     let result = Twitter::new(params)
-        .hit_search_api(&"hoge".to_string())
+        .hit_search_api(None)
         .await
         .unwrap();
     let tweets = result.statuses;
