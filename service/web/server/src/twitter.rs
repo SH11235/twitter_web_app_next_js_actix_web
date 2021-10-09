@@ -1,5 +1,5 @@
 // external crate
-use actix_web::{HttpRequest, HttpResponse};
+use actix_web::{post, web, HttpRequest, HttpResponse};
 use dotenv::dotenv;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
@@ -8,7 +8,7 @@ use serde_json::Value;
 use std::env;
 
 // lib.rs
-use super::{establish_connection, register_tweet_to_db};
+use super::{establish_connection, register_api_result, register_tweet_to_db, NewTweet};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchAPIResult {
@@ -59,7 +59,7 @@ impl Twitter {
 
     pub async fn hit_search_api(
         &self,
-        next_results: &String,
+        next_results: Option<&String>,
     ) -> Result<SearchAPIResult, Box<dyn std::error::Error>> {
         let endpoint = "https://api.twitter.com/1.1/search/tweets.json";
         let mut headers = HeaderMap::new();
@@ -67,8 +67,13 @@ impl Twitter {
             AUTHORIZATION,
             format!("Bearer {}", &self.bearer_token).parse().unwrap(),
         );
-        let qs = QString::from(next_results.as_str());
-        let max_id = qs.get("max_id").unwrap_or("0").to_string();
+        let max_id = match next_results {
+            None => "".to_string(),
+            Some(params) => {
+                let qs = QString::from(params.as_str());
+                qs.get("max_id").unwrap_or("0").to_string()
+            }
+        };
         let client = reqwest::Client::new()
             .get(endpoint)
             .query(&[
@@ -125,7 +130,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     );
 
     for _ in 0..10 {
-        result = twitter.hit_search_api(&next_results).await;
+        result = twitter.hit_search_api(Some(&next_results)).await;
         match result {
             Ok(res) => {
                 next_results = res.search_metadata["next_results"]
@@ -147,7 +152,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         .json(values)
 }
 
-pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
+pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
@@ -158,12 +163,28 @@ pub async fn register_tweet(req: HttpRequest) -> HttpResponse {
         },
     };
     let result = Twitter::new(params)
-        .hit_search_api(&"hoge".to_string())
+        .hit_search_api(None)
         .await
         .unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
-    let _register_tweet_to_db = register_tweet_to_db(&connection, &tweets);
+    let _register_api_result = register_api_result(&connection, &tweets);
 
     HttpResponse::Ok().json(&tweets)
+}
+
+#[post("/register_favorite_tweet")]
+pub async fn register_favorite_tweet(tweet: web::Json<NewTweet>) -> String {
+    let connection = establish_connection();
+    let favorite_tweet = NewTweet {
+        text: tweet.text.to_string(),
+        tweet_link: tweet.tweet_link.to_string(),
+        user_link: tweet.user_link.to_string(),
+        tweet_time: tweet.tweet_time.to_string(),
+        user_name: tweet.user_name.to_string(),
+        screen_name: tweet.screen_name.to_string(),
+        profile_image_url: tweet.profile_image_url.to_string(),
+    };
+    let _register_api_result = register_tweet_to_db(&connection, favorite_tweet);
+    "register tweet".to_string()
 }

@@ -2,11 +2,11 @@ table! {
     tweets (id) {
         id -> Int4,
         text -> Text,
-        tweetlink -> Varchar,
-        userlink -> Varchar,
-        tweettime -> Varchar,
-        username -> Varchar,
-        screenname -> Varchar,
-        profileimageurl -> Varchar,
+        tweet_link -> Varchar,
+        user_link -> Varchar,
+        tweet_time -> Varchar,
+        user_name -> Varchar,
+        screen_name -> Varchar,
+        profile_image_url -> Varchar,
     }
 }
