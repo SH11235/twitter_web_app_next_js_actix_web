@@ -18,10 +18,11 @@ pub fn establish_connection() -> PgConnection {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
+    PgConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn register_api_result<'a>(conn: &PgConnection, tweets: &Vec<twitter::TweetInfo>) {
+pub fn register_api_result(conn: &PgConnection, tweets: &[twitter::TweetInfo]) {
     let twitter_base_url = "https://twitter.com";
     for tweet in tweets.iter() {
         let text = &tweet.text;
@@ -34,8 +35,8 @@ pub fn register_api_result<'a>(conn: &PgConnection, tweets: &Vec<twitter::TweetI
 
         let tweet_vec = NewTweet {
             text: text.to_string(),
-            tweet_link: tweet_link,
-            user_link: user_link,
+            tweet_link,
+            user_link,
             tweet_time: tweet_time.to_string(),
             user_name: user_name.to_string(),
             screen_name: screen_name.to_string(),
@@ -45,7 +46,7 @@ pub fn register_api_result<'a>(conn: &PgConnection, tweets: &Vec<twitter::TweetI
     }
 }
 
-pub fn register_tweet_to_db<'a>(conn: &PgConnection, tweet: NewTweet) {
+pub fn register_tweet_to_db(conn: &PgConnection, tweet: NewTweet) {
     use schema::tweets;
     let _insert_tweet: Tweet = diesel::insert_into(tweets::table)
         .values(&tweet)

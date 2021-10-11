@@ -114,7 +114,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
             break;
         }
     }
-    if req_origin == "" {
+    if req_origin.is_empty() {
         allow_origin = true;
     }
 

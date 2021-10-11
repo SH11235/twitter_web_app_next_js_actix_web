@@ -1,7 +1,6 @@
 // external crate
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
-use env_logger;
 use std::env;
 use twitter_search::twitter::{hit_api_and_register_tweet, register_favorite_tweet, run_search};
 
