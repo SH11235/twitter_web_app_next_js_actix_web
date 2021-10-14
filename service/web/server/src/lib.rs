@@ -1,7 +1,6 @@
 // external crate
 #[macro_use]
 extern crate diesel;
-extern crate dotenv;
 
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
@@ -9,9 +8,15 @@ use dotenv::dotenv;
 use std::env;
 
 // modules
+pub mod database_utils;
+pub mod domain;
+pub mod driver;
 pub mod models;
+pub mod routes;
 pub mod schema;
 pub mod twitter;
+pub mod usecase;
+
 use models::{NewTweet, Tweet};
 
 pub fn establish_connection() -> PgConnection {
