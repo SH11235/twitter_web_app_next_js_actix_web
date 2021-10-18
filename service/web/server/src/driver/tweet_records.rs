@@ -1,7 +1,7 @@
 use crate::database_utils::error::{DataAccessError, UseCase};
 use crate::domain::entity::tweet_record::TweetRecord;
 use crate::schema::tweets;
-use crate::usecase::tweet_records::add;
+use crate::usecase::tweet_records::{add, search_by_tweet_id};
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -78,5 +78,26 @@ impl<'a> add::AddRecordUseCase for TweetRecordDriver<'a> {
             .map_err(|_| DataAccessError::InternalError)?;
 
         Ok(record_result.to_entity())
+    }
+}
+
+impl<'a> search_by_tweet_id::SearchRecordsByTweetIdUseCase for TweetRecordDriver<'a> {
+    fn get_records(
+        &self,
+        input: search_by_tweet_id::InputData,
+    ) -> Result<Vec<TweetRecord>, DataAccessError> {
+        let tweet_id = input.tweet_id;
+
+        let record_results: Vec<RecordItem> = tweets::dsl::tweets
+            .filter(tweets::dsl::tweet_id.eq(tweet_id))
+            .load::<RecordItem>(self.connection)
+            .map_err(|_| DataAccessError::InternalError)?;
+
+        let results = record_results
+            .iter()
+            .map(|result| result.to_entity())
+            .collect();
+
+        Ok(results)
     }
 }
