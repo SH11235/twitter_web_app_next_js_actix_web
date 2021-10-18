@@ -92,7 +92,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
-        result_type: qs.get("type").unwrap().to_string(),
+        result_type: qs.get("type").unwrap_or("mixed").to_string(),
         origin: match req.headers().get("Origin") {
             Some(o) => o.to_str().unwrap().to_string(),
             None => "".to_string(),
@@ -156,7 +156,7 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
-        result_type: qs.get("type").unwrap().to_string(),
+        result_type: qs.get("type").unwrap_or("mixed").to_string(),
         origin: match req.headers().get("Origin") {
             Some(o) => o.to_str().unwrap().to_string(),
             None => "".to_string(),
