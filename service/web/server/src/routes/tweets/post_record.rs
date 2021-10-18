@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PostParams {
+    pub tweet_id: String,
     pub text: String,
     pub tweet_link: String,
     pub user_link: String,
@@ -18,6 +19,7 @@ pub struct PostParams {
 impl PostParams {
     pub fn to_input_data(&self) -> InputData {
         InputData {
+            tweet_id: self.tweet_id.clone(),
             text: self.text.clone(),
             tweet_link: self.tweet_link.clone(),
             user_link: self.user_link.clone(),

@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct InputData {
+    pub tweet_id: String,
     pub text: String,
     pub tweet_link: String,
     pub user_link: String,

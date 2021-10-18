@@ -30,6 +30,7 @@ pub fn establish_connection() -> PgConnection {
 pub fn register_api_result(conn: &PgConnection, tweets: &[twitter::TweetInfo]) {
     let twitter_base_url = "https://twitter.com";
     for tweet in tweets.iter() {
+        let tweet_id = &tweet.id_str;
         let text = &tweet.text;
         let user_link = format!("{}{}{}", &twitter_base_url, "/", tweet.user.screen_name);
         let tweet_link = format!("{}{}{}", user_link, "/status/", tweet.id_str);
@@ -39,6 +40,7 @@ pub fn register_api_result(conn: &PgConnection, tweets: &[twitter::TweetInfo]) {
         let profile_image_url = &tweet.user.profile_image_url_https;
 
         let tweet_vec = NewTweet {
+            tweet_id: tweet_id.to_string(),
             text: text.to_string(),
             tweet_link,
             user_link,

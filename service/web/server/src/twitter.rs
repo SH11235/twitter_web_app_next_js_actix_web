@@ -162,10 +162,7 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
             None => "".to_string(),
         },
     };
-    let result = Twitter::new(params)
-        .hit_search_api(None)
-        .await
-        .unwrap();
+    let result = Twitter::new(params).hit_search_api(None).await.unwrap();
     let tweets = result.statuses;
     let connection = establish_connection();
     let _register_api_result = register_api_result(&connection, &tweets);
@@ -177,6 +174,7 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
 pub async fn register_favorite_tweet(tweet: web::Json<NewTweet>) -> String {
     let connection = establish_connection();
     let favorite_tweet = NewTweet {
+        tweet_id: tweet.tweet_id.to_string(),
         text: tweet.text.to_string(),
         tweet_link: tweet.tweet_link.to_string(),
         user_link: tweet.user_link.to_string(),

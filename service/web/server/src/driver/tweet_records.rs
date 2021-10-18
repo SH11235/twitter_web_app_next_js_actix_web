@@ -21,6 +21,7 @@ impl<'a> TweetRecordDriver<'a> {
 #[derive(Insertable)]
 #[table_name = "tweets"]
 struct NewRecord {
+    tweet_id: String,
     text: String,
     tweet_link: String,
     user_link: String,
@@ -33,6 +34,7 @@ struct NewRecord {
 #[derive(Debug, Queryable, Serialize, Deserialize)]
 struct RecordItem {
     id: i32,
+    tweet_id: String,
     text: String,
     tweet_link: String,
     user_link: String,
@@ -60,6 +62,7 @@ impl RecordItem {
 impl<'a> add::AddRecordUseCase for TweetRecordDriver<'a> {
     fn add_record(&self, input: add::InputData) -> Result<TweetRecord, DataAccessError> {
         let new_record = NewRecord {
+            tweet_id: input.tweet_id,
             text: input.text,
             tweet_link: input.tweet_link,
             user_link: input.user_link,
