@@ -5,8 +5,7 @@ use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
 use twitter_search::database_utils::pool::env_database_url;
 use twitter_search::routes;
-use std::env;
-use twitter_search::twitter::{hit_api_and_register_tweet, register_favorite_tweet, run_search};
+use twitter_search::twitter::{hit_api_and_register_tweet, run_search};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -38,7 +37,6 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::resource("/register_tweet").route(web::get().to(hit_api_and_register_tweet)),
             )
-            .service(register_favorite_tweet)
     })
     .bind(&bind)?
     .run()

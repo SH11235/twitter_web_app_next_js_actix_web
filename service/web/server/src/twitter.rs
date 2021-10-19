@@ -169,20 +169,3 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
 
     HttpResponse::Ok().json(&tweets)
 }
-
-#[post("/register_favorite_tweet")]
-pub async fn register_favorite_tweet(tweet: web::Json<NewTweet>) -> String {
-    let connection = establish_connection();
-    let favorite_tweet = NewTweet {
-        tweet_id: tweet.tweet_id.to_string(),
-        text: tweet.text.to_string(),
-        tweet_link: tweet.tweet_link.to_string(),
-        user_link: tweet.user_link.to_string(),
-        tweet_time: tweet.tweet_time.to_string(),
-        user_name: tweet.user_name.to_string(),
-        screen_name: tweet.screen_name.to_string(),
-        profile_image_url: tweet.profile_image_url.to_string(),
-    };
-    let _register_api_result = register_tweet_to_db(&connection, favorite_tweet);
-    "register tweet".to_string()
-}
