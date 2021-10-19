@@ -48,6 +48,7 @@ impl RecordItem {
     fn to_entity(&self) -> TweetRecord {
         TweetRecord {
             id: self.id,
+            tweet_id: self.tweet_id.clone(),
             text: self.text.clone(),
             tweet_link: self.tweet_link.clone(),
             user_link: self.user_link.clone(),
