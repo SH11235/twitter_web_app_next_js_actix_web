@@ -1,7 +1,7 @@
 use crate::database_utils::error::{DataAccessError, UseCase};
 use crate::domain::entity::tweet_record::TweetRecord;
 use crate::schema::tweets;
-use crate::usecase::tweet_records::{add, search_by_tweet_id};
+use crate::usecase::tweet_records::{add, delete, search_by_tweet_id};
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -99,5 +99,18 @@ impl<'a> search_by_tweet_id::SearchRecordsByTweetIdUseCase for TweetRecordDriver
             .collect();
 
         Ok(results)
+    }
+}
+
+impl<'a> delete::DeleteRecordUseCase for TweetRecordDriver<'a> {
+    fn delete_record(&self, input: delete::InputData) -> Result<(), DataAccessError> {
+        let tweet_id = input.tweet_id;
+
+        let result = diesel::delete(tweets::dsl::tweets.filter(tweets::dsl::tweet_id.eq(tweet_id)))
+            .execute(self.connection);
+        match result {
+            Ok(_) => Ok(()),
+            Err(_) => Err(DataAccessError::InternalError),
+        }
     }
 }
