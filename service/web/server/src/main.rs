@@ -3,6 +3,7 @@ use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
+use std::env;
 use twitter_search::database_utils::pool::env_database_url;
 use twitter_search::routes;
 use twitter_search::twitter::{hit_api_and_register_tweet, run_search};
