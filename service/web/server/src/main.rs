@@ -18,12 +18,12 @@ async fn main() -> std::io::Result<()> {
     let pool = r2d2::Pool::builder()
         .build(manager)
         .expect("Failed to create pool.");
-    
+
     let port: i32 = env::var("PORT")
         .unwrap_or_else(|_| "8000".to_string())
         .parse()
         .expect("PORT must be a number");
-    
+
     let bind = format!("0.0.0.0:{}", port);
 
     println!("Starting server at: {}", &bind);
@@ -34,6 +34,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .data(web::JsonConfig::default().limit(4096))
             .service(web::scope("/tweets").configure(routes::tweets::config))
+            .service(web::scope("/twitter_api").configure(routes::hit_twitter_api::config))
             .service(web::resource("/twitter_search").route(web::get().to(run_search)))
             .service(
                 web::resource("/register_tweet").route(web::get().to(hit_api_and_register_tweet)),

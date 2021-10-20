@@ -1,5 +1,5 @@
 // external crate
-use actix_web::{post, web, HttpRequest, HttpResponse};
+use actix_web::{HttpRequest, HttpResponse};
 use dotenv::dotenv;
 use qstring::QString;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
@@ -8,7 +8,7 @@ use serde_json::Value;
 use std::env;
 
 // lib.rs
-use super::{establish_connection, register_api_result, register_tweet_to_db, NewTweet};
+use super::{establish_connection, register_api_result};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct SearchAPIResult {
