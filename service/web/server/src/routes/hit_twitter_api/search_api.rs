@@ -1,40 +1,54 @@
 use crate::driver::hit_twitter_api::TwitterApiDriver;
 use crate::usecase::hit_twitter_api::hit_search_api::{self, RequestParams};
 use actix_web::{web, HttpRequest, HttpResponse};
-use qstring::QString;
 use serde::{Deserialize, Serialize};
+use std::fmt;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub enum ResultType {
+    Popular,
+    Mixed,
+    Recent,
+}
+
+impl fmt::Display for ResultType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ResultType::Popular => write!(f, "popular"),
+            ResultType::Mixed => write!(f, "mixed"),
+            ResultType::Recent => write!(f, "recent"),
+        }
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GetParams {
     pub q: String,
-    pub count: Option<String>,
-    pub result_type: Option<String>,
+    pub count: Option<i32>,
+    pub result_type: Option<ResultType>,
     pub origin: Option<String>,
-    pub max_id: Option<String>,
+    pub max_id: Option<i32>,
 }
 
 impl GetParams {
     pub fn to_api_params(&self) -> RequestParams {
         RequestParams {
             q: self.q.clone(),
-            count: match self.count.clone() {
-                Some(count) => count,
-                None => "100".to_string(),
+            count: match self.count {
+                Some(count) => count.to_string(),
+                None => 100.to_string(),
             },
-            result_type: match self.result_type.clone() {
-                Some(result_type) => result_type,
+            result_type: match &self.result_type {
+                Some(result_type) => result_type.to_string(),
                 None => "mixed".to_string(),
             },
             origin: match self.origin.clone() {
-                Some(o) => o,
+                Some(oringin) => oringin,
                 None => "".to_string(),
             },
-            max_id: match self.max_id.clone() {
-                None => "0".to_string(),
-                Some(params) => {
-                    let qs = QString::from(params.as_str());
-                    qs.get("max_id").unwrap_or("0").to_string()
-                }
+            max_id: match self.max_id {
+                None => 0.to_string(),
+                Some(max_id) => max_id.to_string(),
             },
         }
     }
