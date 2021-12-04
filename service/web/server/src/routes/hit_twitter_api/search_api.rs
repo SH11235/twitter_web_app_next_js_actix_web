@@ -26,7 +26,6 @@ pub struct GetParams {
     pub q: String,
     pub count: Option<i32>,
     pub result_type: Option<ResultType>,
-    pub origin: Option<String>,
     pub max_id: Option<i32>,
 }
 
@@ -42,10 +41,6 @@ impl GetParams {
                 Some(result_type) => result_type.to_string(),
                 None => "mixed".to_string(),
             },
-            origin: match self.origin.clone() {
-                Some(oringin) => oringin,
-                None => "".to_string(),
-            },
             max_id: match self.max_id {
                 None => 0.to_string(),
                 Some(max_id) => max_id.to_string(),
@@ -54,18 +49,11 @@ impl GetParams {
     }
 }
 
-pub async fn route(req: HttpRequest, item: web::Query<GetParams>) -> HttpResponse {
-    // TODO CORS対応
-    let _origin = match req.headers().get("Origin") {
-        Some(o) => o.to_str().unwrap().to_string(),
-        None => "".to_string(),
-    };
-
+pub async fn route(item: web::Query<GetParams>) -> HttpResponse {
     let twitter_api_driver = TwitterApiDriver::new();
     match hit_search_api::execute(twitter_api_driver, item.to_api_params()).await {
         Ok(res) => HttpResponse::Ok()
             .header("Content-Type", "application/json")
-            .header("Access-Control-Allow-Origin", "*")
             .json(res),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }

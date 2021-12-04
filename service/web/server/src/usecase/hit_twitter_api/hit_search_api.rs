@@ -6,7 +6,6 @@ pub struct RequestParams {
     pub q: String,
     pub count: String,
     pub result_type: String,
-    pub origin: String,
     pub max_id: String,
 }
 

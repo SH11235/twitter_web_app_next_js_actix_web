@@ -1,8 +1,11 @@
 // external crate
+use actix_cors::Cors;
+use actix_web::http::header;
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
+use dotenv::dotenv;
 use std::env;
 use twitter_search::database_utils::pool::env_database_url;
 use twitter_search::routes;
@@ -29,9 +32,29 @@ async fn main() -> std::io::Result<()> {
     println!("Starting server at: {}", &bind);
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin_fn(|origin, _req_head| -> bool {
+                dotenv().ok();
+                env::var("allowed_origin")
+                    .expect("allowed_origin must be set")
+                    .split(",")
+                    .collect::<Vec<&str>>()
+                    .iter()
+                    .any(|env_origin| env_origin == origin)
+            })
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_headers(vec![
+                header::AUTHORIZATION,
+                header::ACCEPT,
+                header::CONTENT_TYPE,
+            ])
+            .supports_credentials()
+            .max_age(3600);
+
         App::new()
             .data(pool.clone())
             .wrap(Logger::default())
+            .wrap(cors)
             .data(web::JsonConfig::default().limit(4096))
             .service(web::scope("/tweets").configure(routes::tweets::config))
             .service(web::scope("/twitter_api").configure(routes::hit_twitter_api::config))

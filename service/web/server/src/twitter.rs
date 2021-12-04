@@ -34,14 +34,12 @@ struct Twitter {
     q: String,
     count: String,
     result_type: String,
-    origin: String,
     bearer_token: String,
 }
 
 struct ApiParams {
     q: String,
     result_type: String,
-    origin: String,
 }
 
 impl Twitter {
@@ -52,7 +50,6 @@ impl Twitter {
             q: params.q,
             count: "100".to_string(),
             result_type: params.result_type,
-            origin: params.origin,
             bearer_token: env::var("bearer_token").expect("bearer_token is not found"),
         }
     }
@@ -93,34 +90,8 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
         result_type: qs.get("type").unwrap_or("mixed").to_string(),
-        origin: match req.headers().get("Origin") {
-            Some(o) => o.to_str().unwrap().to_string(),
-            None => "".to_string(),
-        },
     };
     let twitter = Twitter::new(params);
-
-    // CORS対応
-    let allowed_origin_list = [
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://ec2-3-135-220-104.us-east-2.compute.amazonaws.com:3000",
-    ];
-    let mut allow_origin = false;
-    let req_origin = &twitter.origin;
-    for origin in allowed_origin_list.iter() {
-        if origin == req_origin {
-            allow_origin = true;
-            break;
-        }
-    }
-    if req_origin.is_empty() {
-        allow_origin = true;
-    }
-
-    if !allow_origin {
-        return HttpResponse::InternalServerError().body(format!("Access from origin {} has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.", &twitter.origin));
-    }
 
     let mut values: Vec<TweetInfo> = vec![];
     let mut result: Result<SearchAPIResult, Box<dyn std::error::Error>>;
@@ -157,10 +128,6 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
         result_type: qs.get("type").unwrap_or("mixed").to_string(),
-        origin: match req.headers().get("Origin") {
-            Some(o) => o.to_str().unwrap().to_string(),
-            None => "".to_string(),
-        },
     };
     let result = Twitter::new(params).hit_search_api(None).await.unwrap();
     let tweets = result.statuses;
