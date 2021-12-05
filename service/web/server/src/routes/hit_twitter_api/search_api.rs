@@ -1,6 +1,6 @@
 use crate::driver::hit_twitter_api::TwitterApiDriver;
 use crate::usecase::hit_twitter_api::hit_search_api::{self, RequestParams};
-use actix_web::{web, HttpRequest, HttpResponse};
+use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
