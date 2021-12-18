@@ -3,6 +3,7 @@ import { twitterBaseURL, searchAPIBaseURL } from './setting';
 type conditions = {
 	word: string,
 	type: string,
+	lang: string,
 }
 
 export type resultType = Required<{
@@ -39,7 +40,7 @@ export const searchAPI = async (
 	}>>,
 ) => {
 	try {
-		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`];
+		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`, `lang=${cond.lang}`];
 		const res = await fetch(`${searchAPIBaseURL}?${params.join('&')}`, {
 			mode: 'cors'
 		});
@@ -79,7 +80,7 @@ export const searchAPI = async (
 				profileImageUrl: "",
 			}];
 		}
-		
+
 		setResultState(() => {
 			return {
 				...resultState,

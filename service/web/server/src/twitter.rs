@@ -34,12 +34,14 @@ struct Twitter {
     q: String,
     count: String,
     result_type: String,
+    lang: String,
     bearer_token: String,
 }
 
 struct ApiParams {
     q: String,
     result_type: String,
+    lang: String,
 }
 
 impl Twitter {
@@ -50,6 +52,7 @@ impl Twitter {
             q: params.q,
             count: "100".to_string(),
             result_type: params.result_type,
+            lang: params.lang,
             bearer_token: env::var("bearer_token").expect("bearer_token is not found"),
         }
     }
@@ -77,6 +80,7 @@ impl Twitter {
                 ("q", &self.q),
                 ("count", &self.count),
                 ("result_type", &self.result_type),
+                ("lang", &self.lang),
                 ("max_id", &max_id),
             ])
             .headers(headers);
@@ -90,6 +94,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
         result_type: qs.get("type").unwrap_or("mixed").to_string(),
+        lang: qs.get("lang").unwrap_or("").to_string(),
     };
     let twitter = Twitter::new(params);
 
@@ -100,7 +105,7 @@ pub async fn run_search(req: HttpRequest) -> HttpResponse {
         &twitter.q, &twitter.count, &twitter.result_type
     );
 
-    for _ in 0..10 {
+    for _ in 0..1 {
         result = twitter.hit_search_api(Some(&next_results)).await;
         match result {
             Ok(res) => {
@@ -128,6 +133,7 @@ pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let params = ApiParams {
         q: qs.get("q").unwrap().to_string(),
         result_type: qs.get("type").unwrap_or("mixed").to_string(),
+        lang: qs.get("lang").unwrap_or("").to_string(),
     };
     let result = Twitter::new(params).hit_search_api(None).await.unwrap();
     let tweets = result.statuses;

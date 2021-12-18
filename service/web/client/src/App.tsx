@@ -23,11 +23,18 @@ const radioOptions = [
 	{ key: 'popular', value: 'popular', text: "popular"},
 ];
 
+const langOptions = [
+	{ key: '', value: 'mixed', text: "unselected"},
+	{ key: 'ja', value: 'ja', text: "ja"},
+	{ key: 'en', value: 'en', text: "en"},
+];
+
 const r: resultType[] = [];
 
 const App: FC = () => {
 	const [ searchCondState, setSearchCondState ] = useState({
 		type: 'mixed',
+		lang: '',
 	});
 
 	let urlParamsStr = decodeURI(window.location.search);
@@ -65,6 +72,7 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
+			lang: searchCondState.lang,
 		};
 		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +82,7 @@ const App: FC = () => {
 		const searchCond = {
 			word: keyWordState,
 			type: searchCondState.type,
+			lang: searchCondState.lang,
 		};
 		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 	};
@@ -119,6 +128,13 @@ const App: FC = () => {
 		});
 	};
 
+	const handleLangChange = (e: React.FormEvent<HTMLInputElement>, value: string) => {
+		e.persist();
+		setSearchCondState(() => {
+			return {...searchCondState, lang: value };
+		});
+	};
+
 	const handlePageChange = (e: PaginationProps) => {
 		e.persist();
 		const pager = e.target.text;
@@ -153,7 +169,9 @@ const App: FC = () => {
 			<Header as="h3">Search Conditions</Header>
 			<KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={serchOnEnterPress} />
 			<SearchButton color="twitter" onClick={searchButtonClick} />
-			<RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
+			<br/><br/>
+			SearchType: <RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
+			Langage: <RadioButton value={searchCondState.lang} options={langOptions} onChange={handleLangChange} />
 		</Segment>
 		<Divider />
 		<Segment>
