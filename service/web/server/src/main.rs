@@ -9,7 +9,7 @@ use dotenv::dotenv;
 use std::env;
 use twitter_search::database_utils::pool::env_database_url;
 use twitter_search::routes;
-use twitter_search::twitter::{hit_api_and_register_tweet, run_search};
+use twitter_search::twitter::hit_api_and_register_tweet;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -58,7 +58,6 @@ async fn main() -> std::io::Result<()> {
             .data(web::JsonConfig::default().limit(4096))
             .service(web::scope("/tweets").configure(routes::tweets::config))
             .service(web::scope("/twitter_api").configure(routes::hit_twitter_api::config))
-            .service(web::resource("/twitter_search").route(web::get().to(run_search)))
             .service(
                 web::resource("/register_tweet").route(web::get().to(hit_api_and_register_tweet)),
             )

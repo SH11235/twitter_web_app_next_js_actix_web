@@ -89,45 +89,6 @@ impl Twitter {
     }
 }
 
-pub async fn run_search(req: HttpRequest) -> HttpResponse {
-    let qs = QString::from(req.query_string());
-    let params = ApiParams {
-        q: qs.get("q").unwrap().to_string(),
-        result_type: qs.get("type").unwrap_or("mixed").to_string(),
-        lang: qs.get("lang").unwrap_or("").to_string(),
-    };
-    let twitter = Twitter::new(params);
-
-    let mut values: Vec<TweetInfo> = vec![];
-    let mut result: Result<SearchAPIResult, Box<dyn std::error::Error>>;
-    let mut next_results = format!(
-        "?q={}&count={}&result_type={}",
-        &twitter.q, &twitter.count, &twitter.result_type
-    );
-
-    for _ in 0..1 {
-        result = twitter.hit_search_api(Some(&next_results)).await;
-        match result {
-            Ok(res) => {
-                next_results = res.search_metadata["next_results"]
-                    .as_str()
-                    .unwrap_or("")
-                    .to_string();
-                values.extend(res.statuses);
-            }
-            Err(err) => {
-                return HttpResponse::InternalServerError().body(err.to_string());
-            }
-        }
-    }
-
-    HttpResponse::Ok()
-        .header("Content-Type", "application/json")
-        .header("Access-Control-Allow-Methods", "GET")
-        .header("Access-Control-Allow-Origin", "*")
-        .json(values)
-}
-
 pub async fn hit_api_and_register_tweet(req: HttpRequest) -> HttpResponse {
     let qs = QString::from(req.query_string());
     let params = ApiParams {
