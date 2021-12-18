@@ -1,5 +1,5 @@
 {
-  "name": "hello-world",
+  "name": "twitter-api-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -45,5 +45,9 @@
   },
   "devDependencies": {
     "rimraf": "^3.0.2"
+  },
+  "volta": {
+    "node": "16.13.1",
+    "npm": "8.3.0"
   }
 }
