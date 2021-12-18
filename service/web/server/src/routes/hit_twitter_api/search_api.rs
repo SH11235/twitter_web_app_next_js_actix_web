@@ -26,6 +26,7 @@ pub struct GetParams {
     pub q: String,
     pub count: Option<i32>,
     pub result_type: Option<ResultType>,
+    pub lang: Option<String>,
     pub max_id: Option<i32>,
 }
 
@@ -40,6 +41,10 @@ impl GetParams {
             result_type: match &self.result_type {
                 Some(result_type) => result_type.to_string(),
                 None => "mixed".to_string(),
+            },
+            lang: match &self.lang {
+                Some(lang) => lang.to_string(),
+                None => "".to_string(),
             },
             max_id: match self.max_id {
                 None => 0.to_string(),

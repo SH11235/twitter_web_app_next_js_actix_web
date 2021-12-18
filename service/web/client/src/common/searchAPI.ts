@@ -1,19 +1,20 @@
-import { twitterBaseURL, searchAPIBaseURL } from './setting';
+import { searchAPIBaseURL } from './setting';
 
 type conditions = {
 	word: string,
 	type: string,
 	lang: string,
+	count: string,
 }
 
 export type resultType = Required<{
 	text: string,
-	tweetLink: string,
-	userLink: string,
-	tweetTime: string,
-	userName: string,
-	screenName: string,
-	profileImageUrl: string,
+	tweet_link: string,
+	user_link: string,
+	tweet_time: string,
+	user_name: string,
+	screen_name: string,
+	profile_image_url: string,
 }>;
 
 type pageState = {
@@ -40,14 +41,13 @@ export const searchAPI = async (
 	}>>,
 ) => {
 	try {
-		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`, `lang=${cond.lang}`];
+		const params: string[] = [`q=${cond.word}`, `type=${cond.type}`, `lang=${cond.lang}`, `count=${cond.count}`];
 		const res = await fetch(`${searchAPIBaseURL}?${params.join('&')}`, {
 			mode: 'cors'
 		});
-		const json = await res.json();
-		const count = json.length;
-		let results: resultType[];
-		if (json.length > 0) {
+		let results: resultType[] = await res.json();
+		const count = results.length;
+		if (results.length > 0) {
 			setPageState(() => {
 				const totalPages = Math.ceil((count - 1) / pageState.view);
 				return {
@@ -56,28 +56,15 @@ export const searchAPI = async (
 					totalPages: totalPages,
 				};
 			});
-			results = json.map((item: any) => {
-				const userLink = `${twitterBaseURL}/${item.user.screen_name}`;
-				const tweetLink = `${userLink}/status/${item.id_str}`;
-				return {
-					text: item.text,
-					tweetLink: tweetLink,
-					userLink: userLink,
-					tweetTime: item.created_at,
-					userName: item.user.name,
-					screenName: item.user.screen_name,
-					profileImageUrl: item.user.profile_image_url_https,
-				};
-			});
 		} else {
 			results = [{
 				text: "No Results. Change the search conditions.",
-				tweetLink: "",
-				userLink: "",
-				tweetTime: "",
-				userName: "anyone",
-				screenName: "id",
-				profileImageUrl: "",
+				tweet_link: "",
+				user_link: "",
+				tweet_time: "",
+				user_name: "anyone",
+				screen_name: "id",
+				profile_image_url: "",
 			}];
 		}
 
@@ -92,12 +79,12 @@ export const searchAPI = async (
 		console.error(error);
 		const results = [{
 			text: "アクセス制限中",
-			tweetLink: "",
-			userLink: "",
-			tweetTime: "",
-			userName: "",
-			screenName: "",
-			profileImageUrl: "",
+			tweet_link: "",
+			user_link: "",
+			tweet_time: "",
+			user_name: "",
+			screen_name: "",
+			profile_image_url: "",
 		}];
 		setResultState(() => {
 			return {

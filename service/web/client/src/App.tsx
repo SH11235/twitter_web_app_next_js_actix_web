@@ -6,8 +6,9 @@ import SearchButton from './components/SearchButton';
 import SearchResult from './components/SearchResult';
 import RadioButton from './components/RadioButton';
 import Pager from './components/Pager';
-import {resultType, searchAPI} from './common/searchAPI';
-
+import { resultType, searchAPI } from './common/searchAPI';
+import { defaultType,defaultCount } from './common/setting';
+import './App.css';
 
 const valueOptions = [
 	{ key: 10, value: 10, text: '10' },
@@ -33,8 +34,9 @@ const r: resultType[] = [];
 
 const App: FC = () => {
 	const [ searchCondState, setSearchCondState ] = useState({
-		type: 'mixed',
+		type: defaultType,
 		lang: '',
+		count: defaultCount,
 	});
 
 	let urlParamsStr = decodeURI(window.location.search);
@@ -73,6 +75,7 @@ const App: FC = () => {
 			word: keyWordState,
 			type: searchCondState.type,
 			lang: searchCondState.lang,
+			count: searchCondState.count,
 		};
 		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,6 +86,7 @@ const App: FC = () => {
 			word: keyWordState,
 			type: searchCondState.type,
 			lang: searchCondState.lang,
+			count: searchCondState.count,
 		};
 		searchAPI(searchCond, pageState, setPageState, resultState, setResultState);
 	};
@@ -103,6 +107,14 @@ const App: FC = () => {
 		const value = e.target.value;
 		setKeyWordState(() => {
 			return value;
+		});
+	};
+
+	const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		e.persist();
+		const value = e.target.value;
+		setSearchCondState(() => {
+			return {...searchCondState, count: value };
 		});
 	};
 	
@@ -167,11 +179,11 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
-			<KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={serchOnEnterPress} />
+			<span className="key-word-box-title">keyword：</span><KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={serchOnEnterPress} />
+			<span className="count-box-title">count：</span><KeyWordBox word={searchCondState.count} onChange={handleCountChange} onKeyPress={serchOnEnterPress} />
 			<SearchButton color="twitter" onClick={searchButtonClick} />
-			<br/><br/>
-			SearchType: <RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} />
-			Langage: <RadioButton value={searchCondState.lang} options={langOptions} onChange={handleLangChange} />
+			<div><span className="option-title">SearchType:</span><RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} /></div>
+			<div><span className="option-title">Langage:</span><RadioButton value={searchCondState.lang} options={langOptions} onChange={handleLangChange} /></div>
 		</Segment>
 		<Divider />
 		<Segment>

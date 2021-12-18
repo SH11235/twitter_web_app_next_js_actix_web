@@ -2,10 +2,12 @@ use crate::domain::entity::search_api::Tweet;
 use crate::hit_api_utils::error::TwitterAPIAccessError;
 use async_trait::async_trait;
 
+#[derive(Debug)]
 pub struct RequestParams {
     pub q: String,
     pub count: String,
     pub result_type: String,
+    pub lang: String,
     pub max_id: String,
 }
 
