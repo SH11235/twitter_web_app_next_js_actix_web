@@ -10,9 +10,28 @@ services:
     hostname: twitter-search-client
   server:
     build: ./services/server
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
     volumes:
       - ../service/web/server:/usr/src/twittersearch/server
     ports:
       - "8000:8000"
     container_name: twitter-search-server
     hostname: twitter-search-server
+    network_mode: "host"
+    tty: true
+    depends_on:
+      - postgres
+  postgres:
+    build: ./services/postgres
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: 'trust'
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "tweet"
+    volumes:
+      - /data/pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    container_name: twitter-search-postgres
+    hostname: twitter-search-postgres
+    network_mode: "host"

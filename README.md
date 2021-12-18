@@ -2,7 +2,7 @@
 
 ## 環境
 
-- node.js 14.4
+- node.js 16.13.1
 - rustc 1.54
 - cargo 1.54
 - rustup 1.24.3
@@ -23,12 +23,17 @@
   apt でインストール<br>
   https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-ja
 
-- 複数バージョンの node を使う場合<br>
-  anyenv などを利用して入れる<br>
-  https://qiita.com/KZ-taran/items/f25a7d608e8ca9b258bf
+- node のバージョン管理<br>
+  volta を使用<br>
+  https://volta.sh/
 
 - パッケージのインストール<br>
   cd service/web/client && npm install
+
+### PostgreSQL
+
+docker を使うのを推奨
+cd docker && docker-compose up -d postres
 
 ### ログ用のディレクトリ
 
@@ -44,6 +49,7 @@
 
 - client：cd docker && docker-compose exec client
 - server：cd docker && docker-compose exec server
+- postres：cd docker && docker-compose exec postres
 
 ## docker を使わない場合のアプリ起動・停止
 
