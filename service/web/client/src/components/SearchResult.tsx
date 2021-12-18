@@ -10,10 +10,10 @@ type Props = {
 
 const SearchResult: FC<Props> = props => {
 	const { results, page, view } = props;
-	const startIndex = (page - 1) * view + 1;
+	const startIndex = (page - 1) * view;
 	const endIndex = page * view;
 	const filterResults = results.filter((result, index) => {
-		return (index >= startIndex) && (index <= endIndex);
+		return (index >= startIndex) && (index < endIndex);
 	});
 	if (filterResults.length > 0) {
 		return (
