@@ -8,6 +8,7 @@ type conditions = {
 }
 
 export type resultType = Required<{
+	tweet_id: string,
 	text: string,
 	tweet_link: string,
 	user_link: string,
@@ -58,6 +59,7 @@ export const searchAPI = async (
 			});
 		} else {
 			results = [{
+				tweet_id: "",
 				text: "No Results. Change the search conditions.",
 				tweet_link: "",
 				user_link: "",
@@ -78,6 +80,7 @@ export const searchAPI = async (
 	} catch (error) {
 		console.error(error);
 		const results = [{
+			tweet_id: "",
 			text: "アクセス制限中",
 			tweet_link: "",
 			user_link: "",
