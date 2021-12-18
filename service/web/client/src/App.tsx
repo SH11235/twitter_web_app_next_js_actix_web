@@ -24,7 +24,7 @@ const radioOptions = [
 ];
 
 const langOptions = [
-	{ key: '', value: 'mixed', text: "unselected"},
+	{ key: 'unselected', value: '', text: "unselected"},
 	{ key: 'ja', value: 'ja', text: "ja"},
 	{ key: 'en', value: 'en', text: "en"},
 ];
