@@ -1,7 +1,5 @@
-FROM node:14-alpine
+FROM node:16
 
 WORKDIR /usr/src/twittersearch/client
 
-RUN npm install
-
-CMD npm run clean && npm ci && npm run start
+CMD npm run clean && npm install && npm run build && npm run start

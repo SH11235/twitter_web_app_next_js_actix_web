@@ -3,14 +3,15 @@
 ## 環境
 
 - node.js 16.13.1
-- rustc 1.54
-- cargo 1.54
-- rustup 1.24.3
+- rustc 1.57
+- cargo 1.57
 - postgres 13.2
 
 ## docker 環境でのアプリ起動
 
-### docker. docker-compose のインストール
+docker-compose up
+
+### docker, docker-compose のインストール
 
 公式ドキュメントを見る。
 
@@ -18,10 +19,6 @@
 - https://docs.docker.jp/compose/install.html#linux-compose
 
 ### node.js のインストール
-
-- Ubuntu 20.04<br>
-  apt でインストール<br>
-  https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-ja
 
 - node のバージョン管理<br>
   volta を使用<br>

@@ -1,4 +1,4 @@
-FROM rust:1.54
+FROM rust:1.57
 
 WORKDIR /usr/src/twittersearch/server
 RUN cargo install diesel_cli --no-default-features --features postgres
