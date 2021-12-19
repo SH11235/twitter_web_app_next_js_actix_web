@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Form, Radio } from 'semantic-ui-react'
-import './RadioButton.css';
+import styles from '../styles/RadioButton.module.css';
 
 type selectOption = {
 	key: string,
@@ -18,9 +18,9 @@ const RadioButton: FC<Props> = props => {
 	const { value, options, onChange } = props;
 	
 	return (
-		<Form className="radio-form">
+		<Form className={styles.radioForm}>
 		{ options.map((item) =>
-		 	<Form.Field className="radio-form-field">
+		 	<Form.Field className={styles.radioFormField}>
 				 <Radio key={ item.key } label={item.text} value={ item.value } onChange={ (e) => onChange(e, item.value) } checked={ value === item.value } />
 			 </Form.Field>
 			)
@@ -28,6 +28,5 @@ const RadioButton: FC<Props> = props => {
 		</Form>
 	);
 };
-
 
 export default RadioButton;

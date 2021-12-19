@@ -1,8 +1,8 @@
-.ui.form.radio-form {
+.radioForm {
 	margin-top: 10px;
 }
 
-.ui.form .radio-form-field {
+.radioFormField {
 	display: inline-block;
 	width: 7rem;
 }

@@ -1,14 +1,14 @@
 import React, { FC, useState, useEffect, useCallback } from 'react';
 import { Container, Divider, Header, PaginationProps, Segment } from 'semantic-ui-react';
-import SelectBox from './components/SelectBox';
-import KeyWordBox from './components/KeyWordBox';
-import SearchButton from './components/SearchButton';
-import SearchResult from './components/SearchResult';
-import RadioButton from './components/RadioButton';
-import Pager from './components/Pager';
-import { resultType, searchAPI } from './common/searchAPI';
-import { defaultType,defaultCount } from './common/setting';
-import './App.css';
+import SelectBox from './SelectBox';
+import KeyWordBox from './KeyWordBox';
+import SearchButton from './SearchButton';
+import SearchResult from './SearchResult';
+import RadioButton from './RadioButton';
+import Pager from './Pager';
+import { resultType, searchAPI } from '../common/searchAPI';
+import { defaultType,defaultCount } from '../common/setting';
+import styles from '../styles/App.module.css';
 
 const valueOptions = [
 	{ key: 10, value: 10, text: '10' },
@@ -39,7 +39,10 @@ const App: FC = () => {
 		count: defaultCount,
 	});
 
-	let urlParamsStr = decodeURI(window.location.search);
+	let urlParamsStr = "";
+	if (typeof window !== "undefined") {
+		urlParamsStr = decodeURI(window.location.search);
+	}
 	type paramsType = {
 		word?: string,
 	};
@@ -179,11 +182,11 @@ const App: FC = () => {
 		<Divider />
 		<Segment>
 			<Header as="h3">Search Conditions</Header>
-			<span className="key-word-box-title">keyword：</span><KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={serchOnEnterPress} />
-			<span className="count-box-title">count：</span><KeyWordBox word={searchCondState.count} onChange={handleCountChange} onKeyPress={serchOnEnterPress} />
+			<span className={ styles.keyWordBoxTitle }>keyword：</span><KeyWordBox word={keyWordState} onChange={handleKeyWordChange} onKeyPress={serchOnEnterPress} />
+			<span className={ styles.countBoxTitle }>count：</span><KeyWordBox word={searchCondState.count} onChange={handleCountChange} onKeyPress={serchOnEnterPress} />
 			<SearchButton color="twitter" onClick={searchButtonClick} />
-			<div><span className="option-title">SearchType:</span><RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} /></div>
-			<div><span className="option-title">Langage:</span><RadioButton value={searchCondState.lang} options={langOptions} onChange={handleLangChange} /></div>
+			<div><span className={ styles.optionTitle }>SearchType:</span><RadioButton value={searchCondState.type} options={radioOptions} onChange={handleRadioChange} /></div>
+			<div><span className={ styles.optionTitle }>Langage:</span><RadioButton value={searchCondState.lang} options={langOptions} onChange={handleLangChange} /></div>
 		</Segment>
 		<Divider />
 		<Segment>

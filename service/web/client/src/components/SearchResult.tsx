@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Card, Image, Icon } from 'semantic-ui-react';
 import { resultType } from '../common/searchAPI';
 import { tweetDBRequestBaseURL } from '../common/setting';
-import './SearchResult.css';
+import styles from '../styles/SearchResult.module.css';
 
 type Props = {
 	results: resultType[],
@@ -44,7 +44,7 @@ const SearchResult: FC<Props> = props => {
 									<Image src={ item.profile_image_url } floated='left' size='mini' />
 									{ item.user_name }@{ item.screen_name }
 								</a>
-								<button className="fav-icon" onClick={ postTweet } data-item={JSON.stringify(item)} >
+								<button className={ styles.favIcon } onClick={ postTweet } data-item={JSON.stringify(item)} >
 									<Icon name="favorite" color='yellow' />
 								</button>
 							</Card.Header>

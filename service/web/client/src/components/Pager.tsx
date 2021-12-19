@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Pagination, PaginationProps } from 'semantic-ui-react';
-import './Pager.css';
+import styles from '../styles/Pager.module.css'
 
 type Props = {
 	pageState: {
@@ -13,7 +13,7 @@ type Props = {
 const Pager: FC<Props> = props => {
 	const { pageState, onClick } = props;
 	return (
-		<Pagination className="flex" activePage={ pageState.page } totalPages={ pageState.totalPages } onClick={ onClick } />
+		<Pagination className={ styles.pagination } activePage={ pageState.page } totalPages={ pageState.totalPages } onClick={ onClick } />
 	);
 };
 
