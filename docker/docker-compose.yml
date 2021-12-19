@@ -3,7 +3,7 @@ services:
   client:
     build: ./services/client
     volumes:
-      - ../service/web/client:/usr/src/twittersearch/client
+      - ../service/client:/usr/src/twittersearch/client
     ports:
       - "3000:3000"
     container_name: twitter-search-client
@@ -13,7 +13,7 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: 'trust'
     volumes:
-      - ../service/web/server:/usr/src/twittersearch/server
+      - ../service/server:/usr/src/twittersearch/server
     ports:
       - "8000:8000"
     container_name: twitter-search-server
