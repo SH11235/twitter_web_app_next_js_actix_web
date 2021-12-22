@@ -65,7 +65,7 @@ cd docker && docker-compose up -d postres
 ### server
 
 - キーワード「keyword」で検索した結果
-  http://localhost:8000/twitter_search?q=keyword&type=mixed
+  http://localhost:8000/twitter_api/?q=keyword&type=mixed
   json が返ってきていれば動作 OK
 
 ### client
